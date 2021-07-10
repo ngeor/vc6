@@ -29,21 +29,22 @@
 
 class xcpufreqapp : public wxApp
 {
-	public:
-		virtual bool OnInit();
+public:
+	virtual bool OnInit();
 };
 
 class xcpufreqFrame : public wxFrame
 {
-	public:
-		xcpufreqFrame( const wxString& title, const wxPoint& pos, const wxSize& size );
-		void OnQuit( wxCommandEvent& event );
-		void OnAbout( wxCommandEvent& event );
-		void OnTimer( wxTimerEvent& event );
-	private:
-		wxDECLARE_EVENT_TABLE();
-		wxTimer timer;
-		wxStaticText cpuLabel;
+public:
+	xcpufreqFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
+	void OnQuit(wxCommandEvent &event);
+	void OnAbout(wxCommandEvent &event);
+	void OnTimer(wxTimerEvent &event);
+
+private:
+	wxDECLARE_EVENT_TABLE();
+	wxTimer timer;
+	wxStaticText cpuLabel;
 };
 
 enum

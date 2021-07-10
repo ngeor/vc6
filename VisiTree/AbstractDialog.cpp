@@ -1,3 +1,4 @@
+#include "StdAfx.h"
 #include "AbstractDialog.h"
 #include <exception>
 
@@ -10,12 +11,20 @@ LRESULT CALLBACK StaticWndProc(HWND hWnd,
 	switch (message)
 	{
 		case WM_INITDIALOG:
+#if _MSC_VER > 1200
 			SetWindowLongPtr(hWnd, GWLP_USERDATA, lParam);
+#else
+			SetWindowLong(hWnd, GWL_USERDATA, lParam);
+#endif
 			dialog = (AbstractDialog *)lParam;
 			dialog->SetWnd(hWnd);
 			return dialog->WndProc(message, wParam, lParam);
 		default:
+#if _MSC_VER > 1200
 			dialog = (AbstractDialog *)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+#else
+			dialog = (AbstractDialog *)GetWindowLong(hWnd, GWL_USERDATA);
+#endif
 			if (dialog)
 			{
 				return dialog->WndProc(message, wParam, lParam);

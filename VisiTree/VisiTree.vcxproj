@@ -23,32 +23,32 @@
     <ProjectGuid>{F0DC16FB-2D3E-4D1B-AE90-A90A132329B4}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>VisiTree</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -148,10 +148,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="About.h" />
+    <ClInclude Include="AbstractDialog.h" />
     <ClInclude Include="AbstractTree.h" />
+    <ClInclude Include="App.h" />
     <ClInclude Include="AVLTree.h" />
     <ClInclude Include="BinarySearchTree.h" />
-    <ClInclude Include="Instance.h" />
+    <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="MessageHandlers.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="Resource.h" />
@@ -163,10 +166,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="About.cpp" />
+    <ClCompile Include="AbstractDialog.cpp" />
     <ClCompile Include="AbstractTree.cpp" />
+    <ClCompile Include="App.cpp" />
     <ClCompile Include="AVLTree.cpp" />
     <ClCompile Include="BinarySearchTree.cpp" />
-    <ClCompile Include="Instance.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="MessageHandlers.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="SimpleTree.cpp" />

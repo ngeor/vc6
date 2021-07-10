@@ -27,18 +27,18 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE DISCARDABLE
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE DISCARDABLE
 BEGIN
     "#include ""winres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE DISCARDABLE
 BEGIN
     "1 TYPELIB ""ChangeFileTimePS.tlb""\r\n"
     "\0"
@@ -112,23 +112,23 @@ CAPTION "Change File Time"
 FONT 8, "Tahoma"
 BEGIN
     LTEXT           "Selected items",IDC_STATIC,7,7,47,8
-    LISTBOX         IDC_LIST1,7,19,223,46,LBS_SORT | LBS_NOINTEGRALHEIGHT | 
+    LISTBOX         IDC_LIST1,7,19,223,46,LBS_SORT | LBS_NOINTEGRALHEIGHT |
                     WS_VSCROLL | WS_TABSTOP
     CONTROL         "Change file attri&butes",IDC_ATTRIBUTES,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,79,85,10
-    CONTROL         "&Archive",IDC_ARCHIVE,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "&Archive",IDC_ARCHIVE,"Button",BS_AUTOCHECKBOX |
                     WS_TABSTOP,21,94,40,10
-    CONTROL         "&Read Only",IDC_READONLY,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "&Read Only",IDC_READONLY,"Button",BS_AUTOCHECKBOX |
                     WS_TABSTOP,79,94,49,10
-    CONTROL         "&Hidden",IDC_HIDDEN,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "&Hidden",IDC_HIDDEN,"Button",BS_AUTOCHECKBOX |
                     WS_TABSTOP,21,109,38,10
-    CONTROL         "&System",IDC_SYSTEM,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "&System",IDC_SYSTEM,"Button",BS_AUTOCHECKBOX |
                     WS_TABSTOP,79,109,39,10
     CONTROL         "Change file &date && time",IDC_TIMES,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,135,91,10
     CONTROL         "Same date && time &for all times",IDC_ONE_TIME,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,21,151,111,10
-    CONTROL         "&Create",IDC_CREATE,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "&Create",IDC_CREATE,"Button",BS_AUTOCHECKBOX |
                     WS_TABSTOP,21,166,38,10
     CONTROL         "DateTimePicker1",IDC_DATEPICKER1,"SysDateTimePick32",
                     DTS_RIGHTALIGN | WS_TABSTOP,75,166,72,12
@@ -136,7 +136,7 @@ BEGIN
                     DTS_RIGHTALIGN | DTS_UPDOWN | WS_TABSTOP | 0x8,149,166,
                     55,12
     PUSHBUTTON      "Now",IDC_NOW1,206,166,24,12
-    CONTROL         "&Last Access",IDC_LAST_ACCESS,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "&Last Access",IDC_LAST_ACCESS,"Button",BS_AUTOCHECKBOX |
                     WS_TABSTOP,21,181,53,10
     CONTROL         "DateTimePicker1",IDC_DATEPICKER2,"SysDateTimePick32",
                     DTS_RIGHTALIGN | WS_TABSTOP,75,181,72,12
@@ -144,7 +144,7 @@ BEGIN
                     DTS_RIGHTALIGN | DTS_UPDOWN | WS_TABSTOP | 0x8,149,181,
                     55,12
     PUSHBUTTON      "Now",IDC_NOW2,206,181,24,12
-    CONTROL         "Last &Write",IDC_LAST_WRITE,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Last &Write",IDC_LAST_WRITE,"Button",BS_AUTOCHECKBOX |
                     WS_TABSTOP,21,196,49,10
     CONTROL         "DateTimePicker1",IDC_DATEPICKER3,"SysDateTimePick32",
                     DTS_RIGHTALIGN | WS_TABSTOP,75,196,72,12
@@ -175,7 +175,7 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,172,125,50,14
     CONTROL         "Files",IDC_FILES,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
                     48,70,30,10
-    CONTROL         "Folders",IDC_FOLDERS,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Folders",IDC_FOLDERS,"Button",BS_AUTOCHECKBOX |
                     WS_TABSTOP,88,70,39,10
     CONTROL         "apply only to the contents, not the folder itself",
                     IDC_NOT_FOLDER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,48,
@@ -199,7 +199,7 @@ IDI_ICON2               ICON    DISCARDABLE     "Question.ico"
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
+GUIDELINES DESIGNINFO DISCARDABLE
 BEGIN
     IDD_RECURSE, DIALOG
     BEGIN
@@ -217,7 +217,7 @@ END
 // String Table
 //
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE DISCARDABLE
 BEGIN
     IDS_PROJNAME            "ChangeFileTimePS"
 END
@@ -228,6 +228,7 @@ END
 
 
 #ifndef APSTUDIO_INVOKED
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Generated from the TEXTINCLUDE 3 resource.

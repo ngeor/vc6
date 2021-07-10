@@ -10,23 +10,25 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
-
+#define WIN32_LEAN_AND_MEAN // Exclude rarely-used stuff from Windows headers
 
 // Windows Header Files:
 #include <windows.h>
-#include <scrnsave.h>
 #include <olectl.h>
+#include <scrnsave.h>
 #include <shlobj.h>
 
 // C RunTime Header Files
-#include <stdlib.h>
 #include <malloc.h>
+#include <math.h>
 #include <memory.h>
+#include <stdlib.h>
 #include <tchar.h>
 #include <time.h>
-#include <math.h>
-
+#if _MSC_VER <= 1200
+// Visual Studio C++ 6
+#include <stdio.h>
+#endif
 // Local Header Files
 
 // TODO: reference additional headers your program requires here

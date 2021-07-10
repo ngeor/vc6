@@ -11,7 +11,7 @@
 
 #include "ObjectWindow.h"
 
-class CPropertyPageDialog : public CObjectWindow  
+class CPropertyPageDialog : public CObjectWindow
 {
 public:
 	CPropertyPageDialog();

@@ -1,0 +1,13 @@
+BasedOnStyle: Microsoft
+UseTab: AlignWithSpaces
+IncludeCategories:
+    - Regex: 'stdafx'
+      Priority: -20
+    - Regex: '<windows'
+      Priority: -10
+    - Regex: '<'
+      Priority: -1
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveMacros: Consecutive
+AccessModifierOffset: -4
+AlignTrailingComments: true

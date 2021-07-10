@@ -14,14 +14,15 @@
 #define WS_ACTIVE 1
 
 #define HT_OUTSIDE 0
-#define HT_CLIENT 1
+#define HT_CLIENT  1
 
-class GWindow  
+class GWindow
 {
 private:
 	LPTSTR FCaption;
 	int FLeft, FTop, FWidth, FHeight;
 	long FState;
+
 public:
 	LONG HitTest(int x, int y);
 	void SetBounds(int left, int top, int width, int height);

@@ -22,14 +22,17 @@ GPointerList::~GPointerList()
 void GPointerList::Add(void *data)
 {
 	LPLIST_NODE q;
-	q = (LPLIST_NODE) malloc(sizeof(LIST_NODE));
+	q       = (LPLIST_NODE)malloc(sizeof(LIST_NODE));
 	q->info = data;
 	q->next = (curr) ? curr->next : NULL;
 	q->prev = (curr) ? curr : NULL;
-	if (curr) curr->next = q;
+	if (curr)
+		curr->next = q;
 	curr = q;
-	if (!(q->prev)) first = curr;
-	if (!(q->next)) last = curr;
+	if (!(q->prev))
+		first = curr;
+	if (!(q->next))
+		last = curr;
 }
 
 void GPointerList::Clear()
@@ -54,11 +57,10 @@ void GPointerList::GotoNext()
 	curr = curr->next;
 }
 
-void* GPointerList::CurrData()
+void *GPointerList::CurrData()
 {
 	return (curr) ? curr->info : NULL;
 }
-
 
 void GPointerList::GotoLast()
 {

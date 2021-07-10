@@ -12,19 +12,20 @@
 GWindow::GWindow()
 {
 	FCaption = NULL;
-	FState = 0;
+	FState   = 0;
 }
 
 GWindow::~GWindow()
 {
-	if (FCaption) free(FCaption);
+	if (FCaption)
+		free(FCaption);
 }
 
 void GWindow::GetWindowRect(LPRECT lpRect)
 {
-	lpRect->left = FLeft;
-	lpRect->top = FTop;
-	lpRect->right = FLeft + FWidth;
+	lpRect->left   = FLeft;
+	lpRect->top    = FTop;
+	lpRect->right  = FLeft + FWidth;
 	lpRect->bottom = FTop + FHeight;
 }
 
@@ -60,8 +61,12 @@ void GWindow::SetCaption(LPCTSTR szText)
 	int len = szText ? _tcslen(szText) : 0;
 	if (len > 0)
 	{
-		FCaption = (LPTSTR) malloc((len + 1) * sizeof(TCHAR));
+		FCaption = (LPTSTR)malloc((len + 1) * sizeof(TCHAR));
+#if _MSC_VER > 1200
 		_tcscpy_s(FCaption, len + 1, szText);
+#else
+		_tcscpy(FCaption, szText);
+#endif
 	}
 	else
 		FCaption = NULL;
@@ -69,9 +74,9 @@ void GWindow::SetCaption(LPCTSTR szText)
 
 void GWindow::SetBounds(int left, int top, int width, int height)
 {
-	FLeft = left;
-	FTop = top;
-	FWidth = width;
+	FLeft   = left;
+	FTop    = top;
+	FWidth  = width;
 	FHeight = height;
 }
 

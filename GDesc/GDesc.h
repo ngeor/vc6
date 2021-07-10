@@ -8,5 +8,4 @@
 
 #include "resource.h"
 
-
 #endif // !defined(AFX_GDESC_H__55EAE446_9C6A_11D3_B5B1_D2158548A178__INCLUDED_)

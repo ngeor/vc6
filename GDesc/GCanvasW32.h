@@ -11,7 +11,7 @@
 
 #include "GAbstractCanvas.h"
 
-class GCanvasW32 : public GAbstractCanvas  
+class GCanvasW32 : public GAbstractCanvas
 {
 public:
 	virtual void SetClippingRect(LPRECT lpRect);

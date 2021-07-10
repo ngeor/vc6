@@ -11,11 +11,8 @@
 
 GAbstractCanvas::GAbstractCanvas()
 {
-
 }
 
 GAbstractCanvas::~GAbstractCanvas()
 {
-
 }
-

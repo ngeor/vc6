@@ -1,6 +1,6 @@
 #if !defined MAIN_WINDOW_H
 #define MAIN_WINDOW_H
-#include "StdAfx.h"
+
 #include "App.h"
 #include "MessageHandlers.h"
 #include "AbstractTree.h"
@@ -26,7 +26,7 @@ private:
 public:
 	MainWindow(App &app);
 	virtual ~MainWindow();
-	virtual LRESULT WndProc(UINT, WPARAM, LPARAM) override;
+	virtual LRESULT WndProc(UINT, WPARAM, LPARAM) OVERRIDE;
 };
 
 #endif

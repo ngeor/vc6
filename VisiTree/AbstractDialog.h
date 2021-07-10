@@ -1,6 +1,6 @@
 #if !defined ABSTRACT_DIALOG_H
 #define ABSTRACT_DIALOG_H
-#include "StdAfx.h"
+
 #include "App.h"
 #include "MessageHandlers.h"
 

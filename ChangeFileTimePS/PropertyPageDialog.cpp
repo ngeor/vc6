@@ -11,7 +11,6 @@
 
 CPropertyPageDialog::CPropertyPageDialog()
 {
-
 }
 
 CPropertyPageDialog::~CPropertyPageDialog()
@@ -20,11 +19,11 @@ CPropertyPageDialog::~CPropertyPageDialog()
 
 LRESULT CPropertyPageDialog::dialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	LRESULT ret=0;
-	CObjectWindow* obj = objectFromDialog(hWnd);
+	LRESULT ret        = 0;
+	CObjectWindow *obj = objectFromDialog(hWnd);
 	if (msg == WM_INITDIALOG)
 	{
-		obj = (CObjectWindow*) ((PROPSHEETPAGE*)lParam)->lParam;
+		obj = (CObjectWindow *)((PROPSHEETPAGE *)lParam)->lParam;
 		obj->attatchToDialog(hWnd);
 		obj->hWnd = hWnd;
 	}
@@ -33,7 +32,7 @@ LRESULT CPropertyPageDialog::dialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPAR
 	if (msg == WM_DESTROY)
 	{
 		delete obj;
-		SetWindowLongPtr(hWnd, DWLP_USER, 0);
+		detachFromDialog(hWnd);
 	}
 	return ret;
 }

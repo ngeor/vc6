@@ -9,7 +9,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-typedef union key {
+typedef union key
+{
 	int i;
 	TCHAR c;
 	LPTSTR s;

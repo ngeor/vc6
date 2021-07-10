@@ -1,3 +1,4 @@
+#include "StdAfx.h"
 #include "MainWindow.h"
 #include "About.h"
 #include "Render.h"
@@ -38,7 +39,11 @@ void MainWindow::OpenTreeFile(LPCTSTR szFile)
 
 	myTree->Clear();
 
+#if _MSC_VER > 1200
 	_tfopen_s(&fp, szFile, _T("r"));
+#else
+	fp = _tfopen(szFile, _T("r"));
+#endif
 	while (!feof(fp))
 	{
 		switch (myTree->GetKeyType())

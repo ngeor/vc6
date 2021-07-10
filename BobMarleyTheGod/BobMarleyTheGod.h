@@ -8,5 +8,4 @@
 
 #include "resource.h"
 
-
 #endif // !defined(AFX_BOBMARLEYTHEGOD_H__A81B70A6_8878_11D3_BE4D_97CA94DA0179__INCLUDED_)

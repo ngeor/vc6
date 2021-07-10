@@ -18,6 +18,7 @@ public:
 	virtual ~BinarySearchTree();
 	virtual void Add(key data);
 	virtual TreeType GetTreeType() { return TreeTypeSearch; }
+
 protected:
 	virtual pnode AddNode(pnode root, key data, key_comparator keycmp);
 };

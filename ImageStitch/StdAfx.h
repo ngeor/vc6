@@ -10,11 +10,11 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#define WIN32_LEAN_AND_MEAN // Exclude rarely-used stuff from Windows headers
 
 #include <windows.h>
-#include <commdlg.h>
 #include <commctrl.h>
+#include <commdlg.h>
 
 // TODO: reference additional headers your program requires here
 #include <stdio.h>

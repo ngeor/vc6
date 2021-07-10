@@ -15,7 +15,7 @@ AVLTree::~AVLTree() {}
 
 pnode AVLTree::AddNode(pnode root, key data, key_comparator keycmp)
 {
-	root = BinarySearchTree::AddNode(root, data, keycmp);
+	root        = BinarySearchTree::AddNode(root, data, keycmp);
 	int root_bf = node_balance_factor(root);
 
 	if (root_bf >= 2 || root_bf <= -2)
@@ -27,10 +27,10 @@ pnode AVLTree::AddNode(pnode root, key data, key_comparator keycmp)
 		int bf = node_balance_factor(root->right);
 		if (bf >= 0)
 		{
-			pnode z = root->right;
-			pnode t23 = z->left;
+			pnode z     = root->right;
+			pnode t23   = z->left;
 			root->right = t23;
-			z->left = root;
+			z->left     = root;
 			return z;
 		}
 	}

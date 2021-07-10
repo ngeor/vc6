@@ -17,6 +17,7 @@ public:
 	AVLTree(KeyType keyType);
 	virtual ~AVLTree();
 	virtual TreeType GetTreeType() { return TreeTypeAVL; }
+
 protected:
 	virtual pnode AddNode(pnode root, key data, key_comparator keycmp);
 };

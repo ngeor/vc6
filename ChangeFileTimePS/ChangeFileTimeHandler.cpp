@@ -1,7 +1,7 @@
 // ChangeFileTimeHandler.cpp : Implementation of CChangeFileTimeHandler
 #include "stdafx.h"
-#include "ChangeFileTimePS_h.h"
 #include "ChangeFileTimeHandler.h"
+#include "ChangeFileTimePS_h.h"
 #include "SimplePage.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -13,17 +13,18 @@ HRESULT CChangeFileTimeHandler::Initialize(LPCITEMIDLIST pidlFolder, LPDATAOBJEC
 	STGMEDIUM stg;
 	TCHAR temp[MAX_PATH];
 
-//	filelist.clear();
+	//	filelist.clear();
 
 	etc.cfFormat = CF_HDROP;
-	etc.ptd = NULL;
+	etc.ptd      = NULL;
 	etc.dwAspect = DVASPECT_CONTENT;
-	etc.lindex = -1; // all of the data
-	etc.tymed = TYMED_HGLOBAL; // HGLOBAL
-	hasfolders=false;
-	if (SUCCEEDED(lpdobj->GetData(&etc, &stg))) {
-		HDROP hDrop = (HDROP) stg.hGlobal;
-		int fileCount= DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
+	etc.lindex   = -1;            // all of the data
+	etc.tymed    = TYMED_HGLOBAL; // HGLOBAL
+	hasfolders   = false;
+	if (SUCCEEDED(lpdobj->GetData(&etc, &stg)))
+	{
+		HDROP hDrop   = (HDROP)stg.hGlobal;
+		int fileCount = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
 
 		for (int i = 0; i < fileCount; i++)
 		{
@@ -39,26 +40,26 @@ HRESULT CChangeFileTimeHandler::Initialize(LPCITEMIDLIST pidlFolder, LPDATAOBJEC
 		return E_FAIL;
 }
 
-HRESULT CChangeFileTimeHandler::AddPages( LPFNADDPROPSHEETPAGE lpfnAddPage, LPARAM lParam)
+HRESULT CChangeFileTimeHandler::AddPages(LPFNADDPROPSHEETPAGE lpfnAddPage, LPARAM lParam)
 {
 
 	InitCommonControls();
 
 	INITCOMMONCONTROLSEX ic;
-	ic.dwICC = ICC_DATE_CLASSES;
+	ic.dwICC  = ICC_DATE_CLASSES;
 	ic.dwSize = sizeof(ic);
 	InitCommonControlsEx(&ic);
 
 	PROPSHEETPAGE p;
-	CSimplePage* newPage = new CSimplePage(filelist, hasfolders);
+	CSimplePage *newPage = new CSimplePage(filelist, hasfolders);
 	ZeroMemory(&p, sizeof(p));
-	p.dwSize = sizeof(p);
-	p.dwFlags = PSP_USEICONID;
-	p.hInstance = _Module.GetModuleInstance();
-	p.pszTemplate=MAKEINTRESOURCE(IDD_SIMPLE_PAGE);
-	p.pfnDlgProc = (DLGPROC) CSimplePage::dialogProc;
-	p.lParam = (LPARAM) newPage;
-	p.pszIcon = MAKEINTRESOURCE(IDI_ICON1);
+	p.dwSize      = sizeof(p);
+	p.dwFlags     = PSP_USEICONID;
+	p.hInstance   = _Module.GetModuleInstance();
+	p.pszTemplate = MAKEINTRESOURCE(IDD_SIMPLE_PAGE);
+	p.pfnDlgProc  = (DLGPROC)CSimplePage::dialogProc;
+	p.lParam      = (LPARAM)newPage;
+	p.pszIcon     = MAKEINTRESOURCE(IDI_ICON1);
 	lpfnAddPage(CreatePropertySheetPage(&p), lParam);
 
 	return NOERROR;

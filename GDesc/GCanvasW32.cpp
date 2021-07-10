@@ -11,19 +11,19 @@
 
 GCanvasW32::GCanvasW32(HANDLE handle)
 {
-	if (IsWindow((HWND) handle) || (!handle))
+	if (IsWindow((HWND)handle) || (!handle))
 	{
-		FWnd = (HWND) handle;
+		FWnd    = (HWND)handle;
 		FHandle = GetDC(FWnd);
 	}
 	else
 	{
-		FWnd = 0;
-		FHandle = (HDC) handle;
+		FWnd    = 0;
+		FHandle = (HDC)handle;
 	}
-		
-	oldPen = (HPEN) SelectObject(FHandle, CreatePen(PS_SOLID, 1, 0));
-	oldBrush = (HBRUSH) SelectObject(FHandle, CreateSolidBrush(0x00FFFFFF));
+
+	oldPen   = (HPEN)SelectObject(FHandle, CreatePen(PS_SOLID, 1, 0));
+	oldBrush = (HBRUSH)SelectObject(FHandle, CreateSolidBrush(0x00FFFFFF));
 }
 
 GCanvasW32::~GCanvasW32()

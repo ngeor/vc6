@@ -4,19 +4,25 @@
 #include "stdafx.h"
 #include "resource.h"
 
-#define ID_TOOLBAR 500
-#define ID_CMD_NEW_FILE 501
+#define ID_TOOLBAR       500
+#define ID_CMD_NEW_FILE  501
 #define ID_CMD_OPEN_FILE 502
 #define ID_CMD_SAVE_FILE 503
 
 #define DECLARE_MSG_CRACK_RET(Name) LPARAM Name(HWND hWnd, WPARAM wParam, LPARAM lParam)
-#define DECLARE_MSG_CRACK(Name) void Name(HWND hWnd, WPARAM wParam, LPARAM lParam)
-#define MSG_CRACK_RET(MsgName, ProcName) case MsgName: return ProcName(hWnd, wParam, lParam);
-#define MSG_CRACK(MsgName, ProcName) case MsgName: ProcName(hWnd, wParam, lParam); break;
+#define DECLARE_MSG_CRACK(Name)     void Name(HWND hWnd, WPARAM wParam, LPARAM lParam)
+#define MSG_CRACK_RET(MsgName, ProcName)                                                                               \
+	case MsgName:                                                                                                      \
+		return ProcName(hWnd, wParam, lParam);
+#define MSG_CRACK(MsgName, ProcName)                                                                                   \
+	case MsgName:                                                                                                      \
+		ProcName(hWnd, wParam, lParam);                                                                                \
+		break;
 
 HINSTANCE hInst;
 
-typedef struct ListEntry {
+typedef struct ListEntry
+{
 	TCHAR szPath[MAX_PATH];
 	HBITMAP hBitmap;
 } ListEntry;
@@ -32,23 +38,23 @@ DECLARE_MSG_CRACK_RET(OnInitDialog)
 	SetDlgItemInt(hWnd, ID_TXT_IMG_HEIGHT, 16, FALSE);
 
 	ZeroMemory(tbb, sizeof(tbb));
-	tbb[0].iBitmap = 0;
+	tbb[0].iBitmap   = 0;
 	tbb[0].idCommand = ID_CMD_NEW_FILE;
-	tbb[0].fsState = TBSTATE_ENABLED;
-	tbb[0].fsStyle = TBSTYLE_BUTTON;
+	tbb[0].fsState   = TBSTATE_ENABLED;
+	tbb[0].fsStyle   = TBSTYLE_BUTTON;
 
-	tbb[1].iBitmap = 1;
+	tbb[1].iBitmap   = 1;
 	tbb[1].idCommand = ID_CMD_OPEN_FILE;
-	tbb[1].fsState = TBSTATE_ENABLED;
-	tbb[1].fsStyle = TBSTYLE_BUTTON;
+	tbb[1].fsState   = TBSTATE_ENABLED;
+	tbb[1].fsStyle   = TBSTYLE_BUTTON;
 
-	tbb[2].iBitmap = 2;
+	tbb[2].iBitmap   = 2;
 	tbb[2].idCommand = ID_CMD_SAVE_FILE;
-	tbb[2].fsState = TBSTATE_ENABLED;
-	tbb[2].fsStyle = TBSTYLE_BUTTON;
+	tbb[2].fsState   = TBSTATE_ENABLED;
+	tbb[2].fsStyle   = TBSTYLE_BUTTON;
 
-	CreateToolbarEx(hWnd, WS_CHILD | WS_VISIBLE, ID_TOOLBAR, 3 /* number of bitmaps */,
-		hInst, IDB_TOOLBAR, tbb, 3 /* number of buttons */, 1, 0, 16, 16, sizeof(TBBUTTON));
+	CreateToolbarEx(hWnd, WS_CHILD | WS_VISIBLE, ID_TOOLBAR, 3 /* number of bitmaps */, hInst, IDB_TOOLBAR, tbb,
+	                3 /* number of buttons */, 1, 0, 16, 16, sizeof(TBBUTTON));
 
 	return 1;
 }
@@ -63,22 +69,22 @@ void Refresh(HWND hWnd)
 	InvalidateRect(hWnd, NULL, TRUE);
 }
 
-void DoAddFile(HWND hWnd, LPCTSTR szFileName, LPCTSTR szPathName=NULL)
+void DoAddFile(HWND hWnd, LPCTSTR szFileName, LPCTSTR szPathName = NULL)
 {
-	ListEntry* le;
+	ListEntry *le;
 	le = new ListEntry;
 	if (szPathName != NULL)
 	{
 		lstrcpy(le->szPath, szPathName);
-		if (szPathName[lstrlen(szPathName)-1] != '\\')
+		if (szPathName[lstrlen(szPathName) - 1] != '\\')
 			lstrcat(le->szPath, _T("\\"));
 		lstrcat(le->szPath, szFileName);
 	}
 	else
 		lstrcpy(le->szPath, szFileName);
-	le->hBitmap = (HBITMAP) LoadImage(0, le->szPath, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	le->hBitmap = (HBITMAP)LoadImage(0, le->szPath, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 
-	SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_ADDSTRING, 0, (LPARAM) le);
+	SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_ADDSTRING, 0, (LPARAM)le);
 }
 
 void OnCmdAdd(HWND hWnd)
@@ -91,7 +97,8 @@ void OnCmdAdd(HWND hWnd)
 	// set filter string
 	LoadString(hInst, IDS_OPEN_IMAGE_FILTER, szFilter, MAX_PATH);
 	for (p = szFilter; *p != '\0'; p++)
-		if (*p == '|') *p = '\0';
+		if (*p == '|')
+			*p = '\0';
 	*(++p) = '\0';
 
 	// set file name to null
@@ -99,14 +106,14 @@ void OnCmdAdd(HWND hWnd)
 
 	// fill in OPENFILENAME structure
 	ZeroMemory(&of, sizeof(OPENFILENAME));
-	of.lStructSize = sizeof(OPENFILENAME);
-	of.hwndOwner = hWnd;
-	of.hInstance = hInst;
-	of.lpstrFilter = szFilter;
+	of.lStructSize  = sizeof(OPENFILENAME);
+	of.hwndOwner    = hWnd;
+	of.hInstance    = hInst;
+	of.lpstrFilter  = szFilter;
 	of.nFilterIndex = 1;
-	of.lpstrFile = szFileName;
-	of.nMaxFile = MAX_PATH;
-	of.Flags = OFN_ALLOWMULTISELECT | OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
+	of.lpstrFile    = szFileName;
+	of.nMaxFile     = MAX_PATH;
+	of.Flags        = OFN_ALLOWMULTISELECT | OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
 
 	if (GetOpenFileName(&of))
 	{
@@ -154,7 +161,7 @@ void OnCmdRemove(HWND hWnd)
 void OnCmdMoveLeft(HWND hWnd, int pos)
 {
 	int nSel = SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETCURSEL, 0, 0);
-	if (nSel >=0 )
+	if (nSel >= 0)
 	{
 		DWORD a, b;
 		int newSel, count = SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETCOUNT, 0, 0);
@@ -186,21 +193,25 @@ void DoOpenFile(HWND hWnd, LPCTSTR szFileName)
 
 	buf[0] = '\0';
 	lstrcpy(buf, szFileName);
-	if (buf[0] == '"' && buf[lstrlen(buf)-1] == '"')
+	if (buf[0] == '"' && buf[lstrlen(buf) - 1] == '"')
 	{
-		buf[lstrlen(buf)-1] = '\0';
-		p=buf + 1;
+		buf[lstrlen(buf) - 1] = '\0';
+		p                     = buf + 1;
 	}
 	else
 		p = buf;
 
+#if _MSC_VER > 1200
 	_tfopen_s(&fp, p, _T("rt"));
+#else
+	fp = _tfopen(p, _T("rt"));
+#endif
 	SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_RESETCONTENT, 0, 0);
-	while (	_fgetts(buf, MAX_PATH, fp) != NULL )
+	while (_fgetts(buf, MAX_PATH, fp) != NULL)
 	{
 		if ((p = _tcsrchr(buf, '\n')) != NULL)
 			*p = '\0';
-			
+
 		DoAddFile(hWnd, buf);
 	}
 	fclose(fp);
@@ -218,7 +229,8 @@ void OnCmdOpenFile(HWND hWnd)
 	// set filter string
 	LoadString(hInst, IDS_OPEN_FILTER, szFilter, MAX_PATH);
 	for (p = szFilter; *p != '\0'; p++)
-		if (*p == '|') *p = '\0';
+		if (*p == '|')
+			*p = '\0';
 	*(++p) = '\0';
 
 	// set file name to null
@@ -229,15 +241,15 @@ void OnCmdOpenFile(HWND hWnd)
 
 	// fill in OPENFILENAME structure
 	ZeroMemory(&of, sizeof(OPENFILENAME));
-	of.lStructSize = sizeof(OPENFILENAME);
-	of.hwndOwner = hWnd;
-	of.hInstance = hInst;
-	of.lpstrFilter = szFilter;
+	of.lStructSize  = sizeof(OPENFILENAME);
+	of.hwndOwner    = hWnd;
+	of.hInstance    = hInst;
+	of.lpstrFilter  = szFilter;
 	of.nFilterIndex = 1;
-	of.lpstrFile = szFileName;
-	of.nMaxFile = MAX_PATH;
-	of.lpstrDefExt = szDefExt;
-	of.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
+	of.lpstrFile    = szFileName;
+	of.nMaxFile     = MAX_PATH;
+	of.lpstrDefExt  = szDefExt;
+	of.Flags        = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
 
 	if (GetOpenFileName(&of))
 	{
@@ -248,12 +260,20 @@ void OnCmdOpenFile(HWND hWnd)
 void DoSaveFile(HWND hWnd, LPCTSTR szFileName)
 {
 	FILE *fp;
+#if _MSC_VER > 1200
 	_tfopen_s(&fp, szFileName, _T("wt"));
+#else
+	fp = _tfopen(szFileName, _T("tw"));
+#endif
 	int i, count = SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETCOUNT, 0, 0);
 	for (i = 0; i < count; i++)
 	{
-		ListEntry* le = (ListEntry*) SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETITEMDATA, i, 0);
+		ListEntry *le = (ListEntry *)SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETITEMDATA, i, 0);
+#if _MSC_VER > 1200
 		_ftprintf_s(fp, _T("%s\n"), le->szPath);
+#else
+		_ftprintf(fp, _T("%s\n"), le->szPath);
+#endif
 	}
 	fclose(fp);
 }
@@ -269,7 +289,8 @@ void OnCmdSaveFile(HWND hWnd)
 	// set filter string
 	LoadString(hInst, IDS_OPEN_FILTER, szFilter, MAX_PATH);
 	for (p = szFilter; *p != '\0'; p++)
-		if (*p == '|') *p = '\0';
+		if (*p == '|')
+			*p = '\0';
 	*(++p) = '\0';
 
 	// set file name to null
@@ -280,15 +301,15 @@ void OnCmdSaveFile(HWND hWnd)
 
 	// fill in OPENFILENAME structure
 	ZeroMemory(&of, sizeof(OPENFILENAME));
-	of.lStructSize = sizeof(OPENFILENAME);
-	of.hwndOwner = hWnd;
-	of.hInstance = hInst;
-	of.lpstrFilter = szFilter;
+	of.lStructSize  = sizeof(OPENFILENAME);
+	of.hwndOwner    = hWnd;
+	of.hInstance    = hInst;
+	of.lpstrFilter  = szFilter;
 	of.nFilterIndex = 1;
-	of.lpstrFile = szFileName;
-	of.nMaxFile = MAX_PATH;
-	of.lpstrDefExt = szDefExt;
-	of.Flags = OFN_EXPLORER | OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY;
+	of.lpstrFile    = szFileName;
+	of.nMaxFile     = MAX_PATH;
+	of.lpstrDefExt  = szDefExt;
+	of.Flags        = OFN_EXPLORER | OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY;
 
 	if (GetSaveFileName(&of))
 	{
@@ -299,42 +320,42 @@ void OnCmdSaveFile(HWND hWnd)
 DECLARE_MSG_CRACK(OnCommand)
 {
 	WORD wNotifyCode = HIWORD(wParam); // notification code
-	WORD wID = LOWORD(wParam);         // item, control, or accelerator identifier
-	HWND hwndCtl = (HWND) lParam;      // handle of control
+	WORD wID         = LOWORD(wParam); // item, control, or accelerator identifier
+	HWND hwndCtl     = (HWND)lParam;   // handle of control
 
 	switch (wID)
 	{
-		case ID_CMD_ADD:
-			OnCmdAdd(hWnd);
-			break;
-		case ID_CMD_REMOVE:
-			OnCmdRemove(hWnd);
-			break;
-		case ID_CMD_MOVE_LEFT:
-			OnCmdMoveLeft(hWnd, -1);
-			break;
-		case ID_CMD_MOVE_RIGHT:
-			OnCmdMoveLeft(hWnd, 1);
-			break;
-		case ID_CMD_NEW_FILE:
-			OnCmdNewFile(hWnd);
-			break;
-		case ID_CMD_OPEN_FILE:
-			OnCmdOpenFile(hWnd);
-			break;
-		case ID_CMD_SAVE_FILE:
-			OnCmdSaveFile(hWnd);
-			break;
+	case ID_CMD_ADD:
+		OnCmdAdd(hWnd);
+		break;
+	case ID_CMD_REMOVE:
+		OnCmdRemove(hWnd);
+		break;
+	case ID_CMD_MOVE_LEFT:
+		OnCmdMoveLeft(hWnd, -1);
+		break;
+	case ID_CMD_MOVE_RIGHT:
+		OnCmdMoveLeft(hWnd, 1);
+		break;
+	case ID_CMD_NEW_FILE:
+		OnCmdNewFile(hWnd);
+		break;
+	case ID_CMD_OPEN_FILE:
+		OnCmdOpenFile(hWnd);
+		break;
+	case ID_CMD_SAVE_FILE:
+		OnCmdSaveFile(hWnd);
+		break;
 	}
 }
 
 DECLARE_MSG_CRACK(OnDeleteItem)
 {
-	int idCtl = wParam;                      // control identifier
-	LPDELETEITEMSTRUCT lpdis = (LPDELETEITEMSTRUCT) lParam; // structure with item information
+	int idCtl                = wParam;                     // control identifier
+	LPDELETEITEMSTRUCT lpdis = (LPDELETEITEMSTRUCT)lParam; // structure with item information
 	if (lpdis->CtlID == ID_LST_ICONS)
 	{
-		ListEntry* le = (ListEntry*) lpdis->itemData;
+		ListEntry *le = (ListEntry *)lpdis->itemData;
 		if (le != NULL)
 		{
 			if (le->hBitmap != NULL)
@@ -346,34 +367,35 @@ DECLARE_MSG_CRACK(OnDeleteItem)
 
 DECLARE_MSG_CRACK(OnDrawItem)
 {
-	LPDRAWITEMSTRUCT lpdis = (LPDRAWITEMSTRUCT) lParam;
-	ListEntry* le = (ListEntry*) lpdis->itemData;
+	LPDRAWITEMSTRUCT lpdis = (LPDRAWITEMSTRUCT)lParam;
+	ListEntry *le          = (ListEntry *)lpdis->itemData;
 
-	FillRect(lpdis->hDC, &lpdis->rcItem, (HBRUSH)(1 + (lpdis->itemState & ODS_SELECTED ? COLOR_HIGHLIGHT : COLOR_WINDOW)));
+	FillRect(lpdis->hDC, &lpdis->rcItem,
+	         (HBRUSH)(1 + (lpdis->itemState & ODS_SELECTED ? COLOR_HIGHLIGHT : COLOR_WINDOW)));
 
-	if ((signed int) lpdis->itemID >= 0 && lpdis->itemData != NULL)
+	if ((signed int)lpdis->itemID >= 0 && lpdis->itemData != NULL)
 	{
 
-		HDC hMemDC = CreateCompatibleDC(0);
-		HBITMAP hOldBmp = (HBITMAP) SelectObject(hMemDC, le->hBitmap);
+		HDC hMemDC      = CreateCompatibleDC(0);
+		HBITMAP hOldBmp = (HBITMAP)SelectObject(hMemDC, le->hBitmap);
 		BITMAP bmp;
 		GetObject(le->hBitmap, sizeof(BITMAP), &bmp);
 
 		SIZE vp;
 		RECT rt;
-		vp.cx = lpdis->rcItem.right - lpdis->rcItem.left;
-		vp.cy = lpdis->rcItem.bottom - lpdis->rcItem.top;
+		vp.cx   = lpdis->rcItem.right - lpdis->rcItem.left;
+		vp.cy   = lpdis->rcItem.bottom - lpdis->rcItem.top;
 		rt.left = rt.top = 0;
 		if (bmp.bmWidth > bmp.bmHeight)
 		{
 			if (bmp.bmWidth > vp.cx)
 			{
-				rt.right = vp.cx;
-				rt.bottom = (bmp.bmHeight * vp.cx)/bmp.bmWidth;
+				rt.right  = vp.cx;
+				rt.bottom = (bmp.bmHeight * vp.cx) / bmp.bmWidth;
 			}
 			else
 			{
-				rt.right = bmp.bmWidth; // set to vp.cx for left justify
+				rt.right  = bmp.bmWidth; // set to vp.cx for left justify
 				rt.bottom = bmp.bmHeight;
 			}
 		}
@@ -382,23 +404,20 @@ DECLARE_MSG_CRACK(OnDrawItem)
 			if (bmp.bmHeight > vp.cy)
 			{
 				rt.bottom = vp.cy;
-				rt.right = (bmp.bmWidth * vp.cy)/bmp.bmHeight;
+				rt.right  = (bmp.bmWidth * vp.cy) / bmp.bmHeight;
 			}
 			else
 			{
-				rt.right = bmp.bmWidth;
+				rt.right  = bmp.bmWidth;
 				rt.bottom = bmp.bmHeight;
 			}
 		}
 
-		OffsetRect(&rt, (lpdis->rcItem.left + lpdis->rcItem.right - rt.right)/2,
-			(lpdis->rcItem.top + lpdis->rcItem.bottom - rt.bottom)/2);
+		OffsetRect(&rt, (lpdis->rcItem.left + lpdis->rcItem.right - rt.right) / 2,
+		           (lpdis->rcItem.top + lpdis->rcItem.bottom - rt.bottom) / 2);
 
-
-		StretchBlt(lpdis->hDC,
-			rt.left, rt.top,
-			rt.right - rt.left, rt.bottom - rt.top,
-			hMemDC, 0, 0, bmp.bmWidth, bmp.bmHeight, SRCCOPY);
+		StretchBlt(lpdis->hDC, rt.left, rt.top, rt.right - rt.left, rt.bottom - rt.top, hMemDC, 0, 0, bmp.bmWidth,
+		           bmp.bmHeight, SRCCOPY);
 
 		DeleteDC(hMemDC);
 	}
@@ -406,7 +425,7 @@ DECLARE_MSG_CRACK(OnDrawItem)
 
 DECLARE_MSG_CRACK(OnMeasureItem)
 {
-	LPMEASUREITEMSTRUCT lpmis = (LPMEASUREITEMSTRUCT) lParam;
+	LPMEASUREITEMSTRUCT lpmis = (LPMEASUREITEMSTRUCT)lParam;
 	RECT rt;
 	GetClientRect(GetDlgItem(hWnd, ID_LST_ICONS), &rt);
 	lpmis->itemHeight = rt.bottom;
@@ -432,15 +451,15 @@ DECLARE_MSG_CRACK(OnPaint)
 			{
 				GetClientRect(hWnd, &clientRt);
 
-				y = clientRt.bottom - 2 - imgSz.cy;
-				x = 2;
+				y          = clientRt.bottom - 2 - imgSz.cy;
+				x          = 2;
 				HDC hMemDC = CreateCompatibleDC(0);
 				BITMAP bmp;
-				ListEntry* le;
+				ListEntry *le;
 
-				for (i = 0; i < count; i++, x+=imgSz.cx)
+				for (i = 0; i < count; i++, x += imgSz.cx)
 				{
-					le = (ListEntry*) SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETITEMDATA, i, 0);
+					le = (ListEntry *)SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETITEMDATA, i, 0);
 					if (le != NULL && le->hBitmap != NULL)
 					{
 						SelectObject(hMemDC, le->hBitmap);
@@ -451,12 +470,12 @@ DECLARE_MSG_CRACK(OnPaint)
 						{
 							if (bmp.bmWidth > imgSz.cx)
 							{
-								rt.right = imgSz.cx;
-								rt.bottom = (bmp.bmHeight * imgSz.cx)/bmp.bmWidth;
+								rt.right  = imgSz.cx;
+								rt.bottom = (bmp.bmHeight * imgSz.cx) / bmp.bmWidth;
 							}
 							else
 							{
-								rt.right = bmp.bmWidth; // set to imgSz.cx for left justify
+								rt.right  = bmp.bmWidth; // set to imgSz.cx for left justify
 								rt.bottom = bmp.bmHeight;
 							}
 						}
@@ -465,22 +484,18 @@ DECLARE_MSG_CRACK(OnPaint)
 							if (bmp.bmHeight > imgSz.cy)
 							{
 								rt.bottom = imgSz.cy;
-								rt.right = (bmp.bmWidth * imgSz.cy)/bmp.bmHeight;
+								rt.right  = (bmp.bmWidth * imgSz.cy) / bmp.bmHeight;
 							}
 							else
 							{
-								rt.right = bmp.bmWidth;
+								rt.right  = bmp.bmWidth;
 								rt.bottom = bmp.bmHeight;
 							}
 						}
 
-						OffsetRect(&rt, x + (imgSz.cx - rt.right)/2,
-							y + (imgSz.cy - rt.bottom)/2);
-						StretchBlt(ps.hdc,
-							rt.left, rt.top,
-							rt.right - rt.left, rt.bottom - rt.top,
-							hMemDC, 0, 0, bmp.bmWidth, bmp.bmHeight, SRCCOPY);
-
+						OffsetRect(&rt, x + (imgSz.cx - rt.right) / 2, y + (imgSz.cy - rt.bottom) / 2);
+						StretchBlt(ps.hdc, rt.left, rt.top, rt.right - rt.left, rt.bottom - rt.top, hMemDC, 0, 0,
+						           bmp.bmWidth, bmp.bmHeight, SRCCOPY);
 					}
 				} /* end of for loop */
 				DeleteDC(hMemDC);
@@ -506,15 +521,9 @@ LPARAM CALLBACK MainDlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	return 0;
 }
 
-int APIENTRY WinMain(HINSTANCE hInstance,
-                     HINSTANCE hPrevInstance,
-                     LPSTR     lpCmdLine,
-                     int       nCmdShow)
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	hInst = hInstance;
- 	DialogBoxParam(hInstance, (LPCTSTR) IDD_MAIN, 0, (DLGPROC) MainDlgProc, (LPARAM) lpCmdLine);
+	DialogBoxParam(hInstance, (LPCTSTR)IDD_MAIN, 0, (DLGPROC)MainDlgProc, (LPARAM)lpCmdLine);
 	return 0;
 }
-
-
-

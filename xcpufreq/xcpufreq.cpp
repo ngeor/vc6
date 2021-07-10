@@ -24,20 +24,14 @@
 #endif
 #include "xcpufreq.h"
 
-wxBEGIN_EVENT_TABLE(xcpufreqFrame, wxFrame)
-	EVT_MENU(Menu_File_Quit, xcpufreqFrame::OnQuit)
-	EVT_MENU(Menu_File_About, xcpufreqFrame::OnAbout)
-	EVT_TIMER(TIMER_ID, xcpufreqFrame::OnTimer)
-wxEND_EVENT_TABLE()
+wxBEGIN_EVENT_TABLE(xcpufreqFrame, wxFrame) EVT_MENU(Menu_File_Quit, xcpufreqFrame::OnQuit)
+	EVT_MENU(Menu_File_About, xcpufreqFrame::OnAbout) EVT_TIMER(TIMER_ID, xcpufreqFrame::OnTimer) wxEND_EVENT_TABLE()
 
-wxIMPLEMENT_APP(xcpufreqapp);
+		wxIMPLEMENT_APP(xcpufreqapp);
 
 bool xcpufreqapp::OnInit()
 {
-	xcpufreqFrame *frame = new xcpufreqFrame(
-		"Hello World",
-		wxPoint(50, 50),
-		wxSize(480, 50));
+	xcpufreqFrame *frame = new xcpufreqFrame("Hello World", wxPoint(50, 50), wxSize(480, 50));
 
 	frame->Show(TRUE);
 	SetTopWindow(frame);
@@ -45,8 +39,7 @@ bool xcpufreqapp::OnInit()
 }
 
 xcpufreqFrame::xcpufreqFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
-	: wxFrame((wxFrame *)NULL, -1, title, pos, size),
-	  timer(this, TIMER_ID),
+	: wxFrame((wxFrame *)NULL, -1, title, pos, size), timer(this, TIMER_ID),
 	  cpuLabel(this, -1, wxT("CPU Information"), wxPoint(0, 0), wxSize(400, 20))
 {
 	/*	wxMenu *menuFile = new wxMenu;
@@ -73,10 +66,8 @@ void xcpufreqFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
 
 void xcpufreqFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 {
-	wxMessageBox(wxT("This is a wxWindows Hello world sample"),
-				 wxT("About Hello World"),
-				 wxOK | wxICON_INFORMATION,
-				 this);
+	wxMessageBox(wxT("This is a wxWindows Hello world sample"), wxT("About Hello World"), wxOK | wxICON_INFORMATION,
+	             this);
 }
 
 void xcpufreqFrame::OnTimer(wxTimerEvent &WXUNUSED(event))

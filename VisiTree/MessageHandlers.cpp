@@ -1,3 +1,4 @@
+#include "StdAfx.h"
 #include "MessageHandlers.h"
 
 bool DefaultMessageHandler::Handle(LPMSG msg)
@@ -14,14 +15,26 @@ bool DialogMessageHandler::Handle(LPMSG msg)
 
 CompositeMessageHandler::~CompositeMessageHandler()
 {
+#if _MSC_VER > 1200
 	for (auto x : m_handlers)
 	{
 		delete x;
 	}
+#else
+	for (std::list<AbstractMessageHandler *>::iterator it = m_handlers.begin();
+		 it != m_handlers.end();
+		 it++)
+	{
+		AbstractMessageHandler *handler = *it;
+		delete handler;
+	}
+#endif
+	m_handlers.clear();
 }
 
 bool CompositeMessageHandler::Handle(LPMSG msg)
 {
+#if _MSC_VER > 1200
 	for (auto x : m_handlers)
 	{
 		if (x->Handle(msg))
@@ -29,7 +42,18 @@ bool CompositeMessageHandler::Handle(LPMSG msg)
 			return true;
 		}
 	}
-
+#else
+	for (std::list<AbstractMessageHandler *>::iterator it = m_handlers.begin();
+		 it != m_handlers.end();
+		 it++)
+	{
+		AbstractMessageHandler *handler = *it;
+		if (handler->Handle(msg))
+		{
+			return true;
+		}
+	}
+#endif
 	return false;
 }
 
