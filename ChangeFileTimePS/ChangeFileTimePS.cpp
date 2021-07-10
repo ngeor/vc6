@@ -6,9 +6,9 @@
 
 #include "stdafx.h"
 #include <initguid.h>
-#include "ChangeFileTimeHandler.h"
 #include "ChangeFileTimePS_h.h"
 #include "ChangeFileTimePS_i.c"
+#include "ChangeFileTimeHandler.h"
 #include "resource.h"
 
 CComModule _Module;
