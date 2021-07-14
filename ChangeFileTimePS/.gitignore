@@ -1,2 +1,6 @@
-ChangeFileTimePS_*.*
+# auto-generated files of this project
+ChangeFileTimePS_h.h
+ChangeFileTimePS_i.c
+ChangeFileTimePS.h
+ChangeFileTimePS.tlb
 dlldata.c

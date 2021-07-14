@@ -97,10 +97,19 @@ function Copy-OutOfVM {
     }
 }
 
-function Clear-OutputFolder {
-    if (Test-Path $GuestFolder) {
-        del -Recurse -Force $GuestFolder
+function Delete-Folders {
+    param (
+        [string[]] $Folders
+    )
+    foreach ($Folder in $Folders) {
+        if (Test-Path $Folder) {
+            del -Recurse -Force $Folder
+        }
     }
+}
+
+function Clear-OutputFolder {
+    Delete-Folders -Folders $GuestFolder, "vc6/x64"
 }
 
 $State = Get-VMState
