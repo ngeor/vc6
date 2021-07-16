@@ -6,7 +6,11 @@
 
 #include "stdafx.h"
 #include <initguid.h>
+#if _MSC_VER > 1200
 #include "ChangeFileTimePS_h.h"
+#else
+#include "ChangeFileTimePS.h"
+#endif
 #include "ChangeFileTimePS_i.c"
 #include "ChangeFileTimeHandler.h"
 #include "resource.h"

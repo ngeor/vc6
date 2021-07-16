@@ -1,6 +1,10 @@
 // ChangeFileTimeHandler.cpp : Implementation of CChangeFileTimeHandler
 #include "stdafx.h"
+#if _MSC_VER > 1200
 #include "ChangeFileTimePS_h.h"
+#else
+#include "ChangeFileTimePS.h"
+#endif
 #include "ChangeFileTimeHandler.h"
 #include "SimplePage.h"
 
