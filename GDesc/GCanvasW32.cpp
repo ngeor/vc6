@@ -71,10 +71,11 @@ void GCanvasW32::Rectangle(int x1, int y1, int x2, int y2)
 	::Rectangle(FHandle, x1, y1, x2, y2);
 }
 
-int GetStringLength(LPCTSTR string, int length) {
-#pragma warning(disable: 4267) // suppress warning about casting size_t to int
+int GetStringLength(LPCTSTR string, int length)
+{
+#pragma warning(disable : 4267) // suppress warning about casting size_t to int
 	return length >= 0 ? length : _tcslen(string);
-#pragma warning(default: 4267) // reset warning
+#pragma warning(default : 4267) // reset warning
 }
 
 void GCanvasW32::TextOut(LPCTSTR string, int length, int x, int y)

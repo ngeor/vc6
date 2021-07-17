@@ -1,0 +1,23 @@
+// StaticLibraryDemo.cpp: implementation of the StaticLibraryDemo class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#include "stdafx.h"
+#include "StaticLibraryDemo.h"
+
+//////////////////////////////////////////////////////////////////////
+// Construction/Destruction
+//////////////////////////////////////////////////////////////////////
+
+StaticLibraryDemo::StaticLibraryDemo()
+{
+}
+
+StaticLibraryDemo::~StaticLibraryDemo()
+{
+}
+
+int Subtract(int a, int b)
+{
+	return a - b;
+}
