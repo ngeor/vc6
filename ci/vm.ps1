@@ -27,7 +27,7 @@ function Start-VM {
 function Close-VM {
     Write-Host "Shutting down VM..."
     # TODO Somehow TeamCity sees the output of poweroff as a warning
-    & $VBoxManage --nologo controlvm $VMName poweroff 2>&1
+    & $VBoxManage --nologo controlvm $VMName poweroff
     & $VBoxManage --nologo snapshot $VMName restorecurrent
 }
 
@@ -57,7 +57,7 @@ function Copy-IntoVM {
             --password `"$VMPassword`" `
             --recursive `
             --target-directory $GuestFolderAbsolute `
-            .\vc6
+            .
         if ($?) {
             break
         }
@@ -109,28 +109,33 @@ function Delete-Folders {
 }
 
 function Clear-OutputFolder {
-    Delete-Folders -Folders $GuestFolder, "vc6/x64"
+    Delete-Folders -Folders $GuestFolder, "x64", "i386", "Debug", "Release"
 }
 
-$State = Get-VMState
-if ($State -eq "poweroff") {
-    Start-VM
-    Clear-OutputFolder
-    Wait-VM
-    Copy-IntoVM
-    $BuildSucceeded = Run-Build
-    Copy-OutOfVM
-    Close-VM
-    if ($BuildSucceeded) {
-        cat $BuildLog
+if (Test-Path ".\vc6.dsw") {
+    $State = Get-VMState
+    if ($State -eq "poweroff") {
+        Start-VM
+        Clear-OutputFolder
+        Wait-VM
+        Copy-IntoVM
+        $BuildSucceeded = Run-Build
+        Copy-OutOfVM
+        Close-VM
+        if ($BuildSucceeded) {
+            cat $BuildLog
+        } else {
+            Write-Warning "Build failed, please check build log below"
+            cat $BuildLog
+            Write-Warning "Build failed, please check build log above"
+            exit 1
+        }
     } else {
-        Write-Warning "Build failed, please check build log below"
-        cat $BuildLog
-        Write-Warning "Build failed, please check build log above"
+        Write-Warning "VM was not powered off, aborting"
         exit 1
+        # Close-VM
     }
 } else {
-    Write-Warning "VM was not powered off, aborting"
+    Write-Error "The script must be run from the vc6 folder where vc6.dsw lives"
     exit 1
-    # Close-VM
 }

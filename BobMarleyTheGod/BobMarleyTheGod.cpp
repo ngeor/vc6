@@ -26,6 +26,9 @@ void LoadMarleyPic();
 void ReadData(int *iSpeed, int *iSmoothness);
 void WriteData(int iSpeed, int iSmoothness);
 
+/// <summary>
+/// Loads a single photo.
+/// </summary>
 void LoadMarleyPic()
 {
 	TCHAR szFile[MAX_PATH];
