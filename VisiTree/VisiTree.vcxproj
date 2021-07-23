@@ -148,13 +148,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="About.h" />
-    <ClInclude Include="AbstractDialog.h" />
     <ClInclude Include="AbstractTree.h" />
-    <ClInclude Include="App.h" />
     <ClInclude Include="AVLTree.h" />
     <ClInclude Include="BinarySearchTree.h" />
     <ClInclude Include="MainWindow.h" />
-    <ClInclude Include="MessageHandlers.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="Resource.h" />
@@ -166,13 +163,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="About.cpp" />
-    <ClCompile Include="AbstractDialog.cpp" />
     <ClCompile Include="AbstractTree.cpp" />
-    <ClCompile Include="App.cpp" />
     <ClCompile Include="AVLTree.cpp" />
     <ClCompile Include="BinarySearchTree.cpp" />
     <ClCompile Include="MainWindow.cpp" />
-    <ClCompile Include="MessageHandlers.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="SimpleTree.cpp" />
@@ -191,6 +185,11 @@
   <ItemGroup>
     <Image Include="small.ico" />
     <Image Include="VisiTree.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WinObj\WinObj.vcxproj">
+      <Project>{1b1bb78f-c09c-48fb-8312-79df14235886}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -4,7 +4,8 @@
 #include "Render.h"
 #include "resource.h"
 
-MainWindow::MainWindow(App &app) : AbstractDialog(app, (LPCTSTR)IDD_MAIN)
+MainWindow::MainWindow(const WinObj::CInstance &instance, HWND hWnd)
+	: WinObj::CDialog(instance, hWnd)
 {
 	myTree = treeFactory.Create(TreeTypeSearch, KeyTypeInteger);
 }
@@ -18,17 +19,17 @@ void MainWindow::SizeControls()
 {
 	RECT rt;
 	int i;
-	GetClientRect(GetWnd(), &rt);
-	MoveChildWindow(ID_INPUT, 0, rt.bottom - 40, rt.right - 300, 20);
-	MoveChildWindow(ID_ADD, rt.right - 300, rt.bottom - 40, 100, 20);
-	MoveChildWindow(ID_FREE, rt.right - 200, rt.bottom - 40, 100, 20);
-	MoveChildWindow(ID_KEYTYPE, rt.right - 100, rt.bottom - 40, 100, 20);
+	GetClientRect(&rt);
+	MoveDlgItem(ID_INPUT, 0, rt.bottom - 40, rt.right - 300, 20);
+	MoveDlgItem(ID_ADD, rt.right - 300, rt.bottom - 40, 100, 20);
+	MoveDlgItem(ID_FREE, rt.right - 200, rt.bottom - 40, 100, 20);
+	MoveDlgItem(ID_KEYTYPE, rt.right - 100, rt.bottom - 40, 100, 20);
 
 	i = rt.right / 4;
-	MoveChildWindow(ID_OPENFILE, 0, rt.bottom - 20, i, 20);
-	MoveChildWindow(ID_SAVEMETAFILE, i, rt.bottom - 20, i, 20);
-	MoveChildWindow(ID_ABOUT, 2 * i, rt.bottom - 20, i, 20);
-	MoveChildWindow(ID_EXIT, 3 * i, rt.bottom - 20, rt.right - 3 * i, 20);
+	MoveDlgItem(ID_OPENFILE, 0, rt.bottom - 20, i, 20);
+	MoveDlgItem(ID_SAVEMETAFILE, i, rt.bottom - 20, i, 20);
+	MoveDlgItem(ID_ABOUT, 2 * i, rt.bottom - 20, i, 20);
+	MoveDlgItem(ID_EXIT, 3 * i, rt.bottom - 20, rt.right - 3 * i, 20);
 }
 
 void MainWindow::OpenTreeFile(LPCTSTR szFile)
@@ -73,7 +74,7 @@ void MainWindow::OpenTreeFile(LPCTSTR szFile)
 	}
 
 	fclose(fp);
-	InvalidateRect(GetWnd(), NULL, TRUE);
+	InvalidateRect();
 }
 
 void ReplaceFilter(LPTSTR filter)
@@ -89,15 +90,12 @@ void ReplaceFilter(LPTSTR filter)
 void MainWindow::OnOpenTreeFile()
 {
 	OPENFILENAME of;
-	TCHAR filter[100];
-	LPTSTR pfilter = (LPTSTR)&filter;
-
-	LoadString(App::Instance(), IDS_OPEN_FILTER, pfilter, 100);
+	LPTSTR pfilter = GetInstance().LoadString(IDS_OPEN_FILTER);
 	ReplaceFilter(pfilter);
 
 	memset(&of, 0, sizeof(of));
 	of.lStructSize  = sizeof(of);
-	of.hwndOwner    = GetWnd();
+	of.hwndOwner    = GetHandle();
 	of.Flags        = OFN_HIDEREADONLY | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
 	of.lpstrFile    = (LPTSTR)malloc(MAX_PATH);
 	of.lpstrFile[0] = '\0';
@@ -111,25 +109,24 @@ void MainWindow::OnOpenTreeFile()
 	}
 
 	free(of.lpstrFile);
+	free(pfilter);
 }
 
 void MainWindow::OnSaveMetafile()
 {
 	OPENFILENAME of;
-	TCHAR filter[100];
-	LPTSTR pfilter = (LPTSTR)&filter;
 
 	if (myTree->GetRoot() == NULL)
 	{
 		return;
 	}
 
-	LoadString(App::Instance(), IDS_SAVE_FILTER, pfilter, 100);
+	LPTSTR pfilter = GetInstance().LoadString(IDS_OPEN_FILTER);
 	ReplaceFilter(pfilter);
 
 	memset(&of, 0, sizeof(of));
 	of.lStructSize  = sizeof(of);
-	of.hwndOwner    = GetWnd();
+	of.hwndOwner    = GetHandle();
 	of.Flags        = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
 	of.lpstrFile    = (LPTSTR)malloc(MAX_PATH);
 	of.lpstrFile[0] = '\0';
@@ -139,38 +136,39 @@ void MainWindow::OnSaveMetafile()
 
 	if (GetSaveFileName(&of))
 	{
-		renderMetafile(myTree, GetWnd(), of.lpstrFile);
+		renderMetafile(myTree, GetHandle(), of.lpstrFile);
 	}
 
 	free(of.lpstrFile);
+	free(pfilter);
 }
 
 void MainWindow::OnAdd()
 {
-	BOOL success;
+	bool success;
 	key data;
-	success = FALSE;
+	success = false;
 	int len;
 
 	switch (myTree->GetKeyType())
 	{
 		case KeyTypeChar:
 			TCHAR buf[2];
-			if (success = (GetDlgItemText(GetWnd(), ID_INPUT, buf, 2) != 0))
+			if (success = (GetDlgItemText(ID_INPUT, buf, 2) != 0))
 				data.c = buf[0];
 			break;
 
 		case KeyTypeInteger:
-			data.i = (int)GetDlgItemInt(GetWnd(), ID_INPUT, &success, TRUE);
+			data.i = (int)GetDlgItemInt(ID_INPUT, &success, true);
 			break;
 
 		case KeyTypeFloat:
 			LPTSTR s;
-			len = GetWindowTextLength(GetDlgItem(GetWnd(), ID_INPUT)) + 1;
+			len = GetDlgItemTextLength(ID_INPUT) + 1;
 			if (len > 0)
 			{
 				s       = (LPTSTR)malloc(sizeof(TCHAR) * len);
-				success = GetDlgItemText(GetWnd(), ID_INPUT, s, len) != 0;
+				success = GetDlgItemText(ID_INPUT, s, len) != 0;
 				_stscanf_s(s, _T("%f"), &data.f);
 				free(s);
 			}
@@ -178,11 +176,11 @@ void MainWindow::OnAdd()
 			break;
 
 		case KeyTypeString:
-			len = GetWindowTextLength(GetDlgItem(GetWnd(), ID_INPUT)) + 1;
+			len = GetDlgItemTextLength(ID_INPUT) + 1;
 			if (len > 0)
 			{
 				data.s  = (LPTSTR)malloc(sizeof(TCHAR) * len);
-				success = GetDlgItemText(GetWnd(), ID_INPUT, data.s, len) != 0;
+				success = GetDlgItemText(ID_INPUT, data.s, len) != 0;
 			}
 			break;
 	}
@@ -190,11 +188,10 @@ void MainWindow::OnAdd()
 	if (success)
 	{
 		myTree->Add(data);
-		InvalidateRect(GetWnd(), NULL, TRUE);
+		InvalidateRect();
 	}
 
-	SendDlgItemMessage(
-		GetWnd(), ID_INPUT, EM_SETSEL, 0, -1); // select everything
+	SendDlgItemMessage(ID_INPUT, EM_SETSEL, 0, -1); // select everything
 }
 
 void MainWindow::KeyTypeChanged(KeyType keyType)
@@ -202,14 +199,13 @@ void MainWindow::KeyTypeChanged(KeyType keyType)
 	int i, j;
 
 	/* Refresh combo box */
-	j = SendDlgItemMessage(GetWnd(), ID_KEYTYPE, CB_GETCOUNT, 0, 0);
+	j = SendDlgItemMessage(ID_KEYTYPE, CB_GETCOUNT, 0, 0);
 	i = 0;
-	while ((i < j) &&
-		   (keyType != (char)SendDlgItemMessage(
-						   GetWnd(), ID_KEYTYPE, CB_GETITEMDATA, i, 0)))
+	while ((i < j) && (keyType != (char)SendDlgItemMessage(
+									  ID_KEYTYPE, CB_GETITEMDATA, i, 0)))
 		i++;
 	if (i < j)
-		SendDlgItemMessage(GetWnd(), ID_KEYTYPE, CB_SETCURSEL, i, 0);
+		SendDlgItemMessage(ID_KEYTYPE, CB_SETCURSEL, i, 0);
 
 	/* Refresh Menu Items */
 	/* Remember that the order is char, int, float, string */
@@ -231,7 +227,7 @@ void MainWindow::KeyTypeChanged(KeyType keyType)
 		default:
 			i = 0;
 	}
-	CheckMenuRadioItem(GetSubMenu(GetMenu(GetWnd()), 1),
+	CheckMenuRadioItem(GetSubMenu(GetMenu(GetHandle()), 1),
 					   ID_TREE_CHAR,
 					   ID_TREE_STRING,
 					   i,
@@ -244,7 +240,7 @@ void MainWindow::SetKeyType(KeyType keyType)
 	myTree                = treeFactory.Create(oldTree->GetTreeType(), keyType);
 	delete oldTree;
 	KeyTypeChanged(keyType);
-	InvalidateRect(GetWnd(), NULL, TRUE);
+	InvalidateRect();
 }
 
 void MainWindow::TreeTypeChanged(TreeType treeType)
@@ -265,7 +261,7 @@ void MainWindow::TreeTypeChanged(TreeType treeType)
 			i = 0;
 	}
 
-	CheckMenuRadioItem(GetSubMenu(GetMenu(GetWnd()), 1),
+	CheckMenuRadioItem(GetSubMenu(GetMenu(GetHandle()), 1),
 					   ID_TREE_SIMPLE,
 					   ID_TREE_AVL,
 					   i,
@@ -278,45 +274,29 @@ void MainWindow::SetTreeType(TreeType treeType)
 	myTree                = treeFactory.Create(treeType, oldTree->GetKeyType());
 	delete oldTree;
 	TreeTypeChanged(treeType);
-	InvalidateRect(GetWnd(), NULL, TRUE);
+	InvalidateRect();
 }
 
-// Adds a string to the combo box.
-int CbAddString(HWND hWnd, int id, LPCTSTR string)
+int MainWindow::CbAddString(int id, LPCTSTR string)
 {
-	return SendDlgItemMessage(hWnd, id, CB_ADDSTRING, 0, (LPARAM)string);
+	return SendDlgItemMessage(id, CB_ADDSTRING, 0, (LPARAM)string);
 }
 
-// Sets item data on a item in the combo box.
-int CbSetItemData(HWND hWnd, int id, int index, LPARAM data)
+int MainWindow::CbSetItemData(int id, int index, LPARAM data)
 {
-	return SendDlgItemMessage(hWnd, id, CB_SETITEMDATA, index, data);
+	return SendDlgItemMessage(id, CB_SETITEMDATA, index, data);
 }
 
-/**
- * Adds an entry to the key type drop down box.
- *
- * The entry is specified by the keyType, which needs to be one of the values
- * defined in Node.h, such as KeyTypeInteger.
- *
- * The text value comes from a string table. The IDs are mapped to the key type
- * by adding the offset 100
- * (e.g. KeyTypeInteger = 1 has the corresponding string ID = 101)
- */
-void CbAddKeyType(HWND hWnd, int keyType)
+void MainWindow::CbAddKeyType(int keyType)
 {
-	const int MAX_BUFFER    = 200;
 	const int STRING_OFFSET = 100;
-	TCHAR buffer[MAX_BUFFER];
-	if (LoadString(
-			App::Instance(), STRING_OFFSET + keyType, buffer, MAX_BUFFER) == 0)
+	LPTSTR buffer           = GetInstance().LoadString(STRING_OFFSET + keyType);
+	LPCTSTR msg             = buffer ? buffer : _T("Failed to load string");
+	CbSetItemData(ID_KEYTYPE, CbAddString(ID_KEYTYPE, msg), keyType);
+	if (buffer)
 	{
-		// failed to load string
-		_tcscpy_s(buffer, _T("Failed to load string"));
+		free(buffer);
 	}
-
-	CbSetItemData(
-		hWnd, ID_KEYTYPE, CbAddString(hWnd, ID_KEYTYPE, buffer), keyType);
 }
 
 LRESULT MainWindow::OnCommand(UINT message, WPARAM wParam, LPARAM lParam)
@@ -327,20 +307,20 @@ LRESULT MainWindow::OnCommand(UINT message, WPARAM wParam, LPARAM lParam)
 	switch (id)
 	{
 		case ID_ABOUT:
-			DialogBox(App::Instance(),
+			DialogBox(GetInstance().GetHandle(),
 					  (LPCTSTR)IDD_ABOUTBOX,
-					  GetWnd(),
+					  GetHandle(),
 					  (DLGPROC)About);
 			break;
 		case ID_EXIT:
-			DestroyWindow(GetWnd());
+			DestroyWindow();
 			break;
 		case ID_ADD:
 			OnAdd();
 			break;
 		case ID_FREE:
 			myTree->Clear();
-			InvalidateRect(GetWnd(), NULL, TRUE);
+			InvalidateRect();
 			break;
 		case ID_OPENFILE:
 			OnOpenTreeFile();
@@ -379,7 +359,7 @@ LRESULT MainWindow::OnCommand(UINT message, WPARAM wParam, LPARAM lParam)
 						(HWND)lParam, CB_GETITEMDATA, i, 0));
 			}
 		default:
-			return DefWindowProc(GetWnd(), message, wParam, lParam);
+			return DefWindowProc(GetHandle(), message, wParam, lParam);
 	}
 
 	return 0;
@@ -395,15 +375,15 @@ LRESULT MainWindow::OnCommand(UINT message, WPARAM wParam, LPARAM lParam)
 //  WM_DESTROY	- post a quit message and return
 //
 //
-LRESULT MainWindow::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT MainWindow::OnMessage(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
 		case WM_INITDIALOG:
-			CbAddKeyType(GetWnd(), KeyTypeInteger);
-			CbAddKeyType(GetWnd(), KeyTypeFloat);
-			CbAddKeyType(GetWnd(), KeyTypeChar);
-			CbAddKeyType(GetWnd(), KeyTypeString);
+			CbAddKeyType(KeyTypeInteger);
+			CbAddKeyType(KeyTypeFloat);
+			CbAddKeyType(KeyTypeChar);
+			CbAddKeyType(KeyTypeString);
 
 			KeyTypeChanged(myTree->GetKeyType());
 			TreeTypeChanged(myTree->GetTreeType());
@@ -416,18 +396,18 @@ LRESULT MainWindow::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 		case WM_COMMAND:
 			return OnCommand(message, wParam, lParam);
 		case WM_CLOSE:
-			DestroyWindow(GetWnd());
+			DestroyWindow();
 			break;
 		case WM_PAINT:
 			PAINTSTRUCT ps;
 			RECT rt;
 
-			BeginPaint(GetWnd(), &ps);
-			GetClientRect(GetWnd(), &rt);
+			BeginPaint(&ps);
+			GetClientRect(&rt);
 			rt.bottom -= 39;
 			rt.right++;
 			render(myTree, &rt, ps.hdc);
-			EndPaint(GetWnd(), &ps);
+			EndPaint(&ps);
 			break;
 		case WM_DESTROY:
 			PostQuitMessage(0);

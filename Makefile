@@ -19,6 +19,8 @@ vc6:
 	powershell -file .\ci\vm.ps1
 docs:
 	cd BobMarleyTheGod && $(DOXYGEN)
+	cd VisiTree && $(DOXYGEN)
+	cd WinObj && $(DOXYGEN)
 
 # example for inline script (e.g. in TeamCity):
 # ```

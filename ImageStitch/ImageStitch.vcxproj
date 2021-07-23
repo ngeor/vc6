@@ -167,6 +167,11 @@
   <ItemGroup>
     <ResourceCompile Include="ImageStitch.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WinObj\WinObj.vcxproj">
+      <Project>{1b1bb78f-c09c-48fb-8312-79df14235886}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
