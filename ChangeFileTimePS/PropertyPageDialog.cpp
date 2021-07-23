@@ -20,10 +20,10 @@ CPropertyPageDialog::~CPropertyPageDialog()
 LRESULT CPropertyPageDialog::dialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	LRESULT ret        = 0;
-	CObjectWindow *obj = objectFromDialog(hWnd);
+	CObjectWindow* obj = objectFromDialog(hWnd);
 	if (msg == WM_INITDIALOG)
 	{
-		obj = (CObjectWindow *)((PROPSHEETPAGE *)lParam)->lParam;
+		obj = (CObjectWindow*)((PROPSHEETPAGE*)lParam)->lParam;
 		obj->attatchToDialog(hWnd);
 		obj->hWnd = hWnd;
 	}

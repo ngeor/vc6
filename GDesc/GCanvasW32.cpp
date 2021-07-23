@@ -93,7 +93,7 @@ void GCanvasW32::SetTextTransparent(BOOL fTransparent)
 	::SetBkMode(FHandle, (fTransparent) ? TRANSPARENT : OPAQUE);
 }
 
-void GCanvasW32::GetTextExtent(LPCTSTR szBuf, int length, int *cx, int *cy)
+void GCanvasW32::GetTextExtent(LPCTSTR szBuf, int length, int* cx, int* cy)
 {
 	SIZE sz;
 	::GetTextExtentPoint32(FHandle, szBuf, GetStringLength(szBuf, length), &sz);

@@ -18,7 +18,7 @@ public:
 	virtual ~CObjectWindow();
 
 	static LRESULT CALLBACK dialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-	static CObjectWindow *objectFromDialog(HWND hWnd);
+	static CObjectWindow* objectFromDialog(HWND hWnd);
 	static void detachFromDialog(HWND hWnd);
 
 	virtual LRESULT Handler(UINT msg, WPARAM wParam, LPARAM lParam);

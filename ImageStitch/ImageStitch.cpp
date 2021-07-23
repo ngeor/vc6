@@ -71,7 +71,7 @@ void Refresh(HWND hWnd)
 
 void DoAddFile(HWND hWnd, LPCTSTR szFileName, LPCTSTR szPathName = NULL)
 {
-	ListEntry *le;
+	ListEntry* le;
 	le = new ListEntry;
 	if (szPathName != NULL)
 	{
@@ -187,7 +187,7 @@ void OnCmdNewFile(HWND hWnd)
 
 void DoOpenFile(HWND hWnd, LPCTSTR szFileName)
 {
-	FILE *fp;
+	FILE* fp;
 	TCHAR buf[MAX_PATH];
 	LPTSTR p;
 
@@ -259,7 +259,7 @@ void OnCmdOpenFile(HWND hWnd)
 
 void DoSaveFile(HWND hWnd, LPCTSTR szFileName)
 {
-	FILE *fp;
+	FILE* fp;
 #if _MSC_VER > 1200
 	_tfopen_s(&fp, szFileName, _T("wt"));
 #else
@@ -268,7 +268,7 @@ void DoSaveFile(HWND hWnd, LPCTSTR szFileName)
 	int i, count = SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETCOUNT, 0, 0);
 	for (i = 0; i < count; i++)
 	{
-		ListEntry *le = (ListEntry *)SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETITEMDATA, i, 0);
+		ListEntry* le = (ListEntry*)SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETITEMDATA, i, 0);
 #if _MSC_VER > 1200
 		_ftprintf_s(fp, _T("%s\n"), le->szPath);
 #else
@@ -355,7 +355,7 @@ DECLARE_MSG_CRACK(OnDeleteItem)
 	LPDELETEITEMSTRUCT lpdis = (LPDELETEITEMSTRUCT)lParam; // structure with item information
 	if (lpdis->CtlID == ID_LST_ICONS)
 	{
-		ListEntry *le = (ListEntry *)lpdis->itemData;
+		ListEntry* le = (ListEntry*)lpdis->itemData;
 		if (le != NULL)
 		{
 			if (le->hBitmap != NULL)
@@ -368,7 +368,7 @@ DECLARE_MSG_CRACK(OnDeleteItem)
 DECLARE_MSG_CRACK(OnDrawItem)
 {
 	LPDRAWITEMSTRUCT lpdis = (LPDRAWITEMSTRUCT)lParam;
-	ListEntry *le          = (ListEntry *)lpdis->itemData;
+	ListEntry* le          = (ListEntry*)lpdis->itemData;
 
 	FillRect(lpdis->hDC, &lpdis->rcItem,
 	         (HBRUSH)(1 + (lpdis->itemState & ODS_SELECTED ? COLOR_HIGHLIGHT : COLOR_WINDOW)));
@@ -455,11 +455,11 @@ DECLARE_MSG_CRACK(OnPaint)
 				x          = 2;
 				HDC hMemDC = CreateCompatibleDC(0);
 				BITMAP bmp;
-				ListEntry *le;
+				ListEntry* le;
 
 				for (i = 0; i < count; i++, x += imgSz.cx)
 				{
-					le = (ListEntry *)SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETITEMDATA, i, 0);
+					le = (ListEntry*)SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETITEMDATA, i, 0);
 					if (le != NULL && le->hBitmap != NULL)
 					{
 						SelectObject(hMemDC, le->hBitmap);

@@ -28,7 +28,7 @@ public:
 	void SetBounds(int left, int top, int width, int height);
 	void SetCaption(LPCTSTR szText);
 	LPTSTR GetCaption();
-	virtual void Paint(GAbstractCanvas *canvas);
+	virtual void Paint(GAbstractCanvas* canvas);
 	GWindow();
 	virtual ~GWindow();
 	void GetWindowRect(LPRECT lpRect);

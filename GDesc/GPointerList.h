@@ -9,10 +9,10 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-typedef struct tagListNode *LPLIST_NODE;
+typedef struct tagListNode* LPLIST_NODE;
 typedef struct tagListNode
 {
-	void *info;
+	void* info;
 	LPLIST_NODE prev, next;
 } LIST_NODE;
 
@@ -25,10 +25,10 @@ public:
 	void GotoPrev();
 	void GotoLast();
 	void Clear();
-	void Add(void *data);
+	void Add(void* data);
 	void GotoFirst();
 	void GotoNext();
-	void *CurrData();
+	void* CurrData();
 	GPointerList();
 	virtual ~GPointerList();
 };

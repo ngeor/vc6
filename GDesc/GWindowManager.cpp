@@ -18,35 +18,35 @@ GWindowManager::~GWindowManager()
 	GotoFirst();
 	while (CurrData())
 	{
-		delete ((GWindow *)CurrData());
+		delete ((GWindow*)CurrData());
 		GotoNext();
 	}
 }
 
-GWindow *GWindowManager::Add(LPCTSTR szCaption, int left, int top, int width, int height)
+GWindow* GWindowManager::Add(LPCTSTR szCaption, int left, int top, int width, int height)
 {
-	GWindow *wnd1;
+	GWindow* wnd1;
 	wnd1 = new GWindow();
 	wnd1->SetBounds(left, top, width, height);
 	wnd1->SetCaption(szCaption);
-	GPointerList::Add((void *)wnd1);
+	GPointerList::Add((void*)wnd1);
 	return wnd1;
 }
 
-GWindow *GWindowManager::GetActiveWindow()
+GWindow* GWindowManager::GetActiveWindow()
 {
 	BOOL f1 = TRUE;
 	GotoFirst();
 
-	while (CurrData() && !(((GWindow *)CurrData())->GetWindowState() & WS_ACTIVE))
+	while (CurrData() && !(((GWindow*)CurrData())->GetWindowState() & WS_ACTIVE))
 		GotoNext();
-	return (GWindow *)CurrData();
+	return (GWindow*)CurrData();
 }
 
-GWindow *GWindowManager::WindowFromPoint(int x, int y)
+GWindow* GWindowManager::WindowFromPoint(int x, int y)
 {
 	GotoLast();
-	while (CurrData() && (((GWindow *)CurrData())->HitTest(x, y) == HT_OUTSIDE))
+	while (CurrData() && (((GWindow*)CurrData())->HitTest(x, y) == HT_OUTSIDE))
 		GotoPrev();
-	return (GWindow *)CurrData();
+	return (GWindow*)CurrData();
 }

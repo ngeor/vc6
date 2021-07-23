@@ -10,7 +10,7 @@ namespace WinObj
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CDialog::CDialog(const CInstance &instance, HWND hWnd) : CWnd(hWnd), _instance(instance)
+CDialog::CDialog(const CInstance& instance, HWND hWnd) : CWnd(hWnd), _instance(instance)
 {
 }
 
@@ -18,23 +18,23 @@ CDialog::~CDialog()
 {
 }
 
-const CInstance &CDialog::GetInstance() const
+const CInstance& CDialog::GetInstance() const
 {
 	return _instance;
 }
 
 LRESULT CALLBACK __InternalDialogBootstrapProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	CDialog *dialog;
+	CDialog* dialog;
 	switch (message)
 	{
 	case WM_INITDIALOG:
 		return 1;
 	default:
 #if _MSC_VER > 1200
-		dialog = (CDialog *)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+		dialog = (CDialog*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 #else
-		dialog = (CDialog *)GetWindowLong(hWnd, GWL_USERDATA);
+		dialog = (CDialog*)GetWindowLong(hWnd, GWL_USERDATA);
 #endif
 		if (dialog)
 		{

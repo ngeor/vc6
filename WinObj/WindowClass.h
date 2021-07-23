@@ -25,12 +25,12 @@ class CWindowClass
 public:
 	CWindowClass();
 	virtual ~CWindowClass();
-	void Register(const CInstance &instance);
-	CWindowClass &Dialog();
-	CWindowClass &WithIcon(int icon);
-	CWindowClass &WithSmallIcon(int smallIcon);
-	CWindowClass &WithMenu(int menu);
-	CWindowClass &WithClassName(LPCTSTR className);
+	void Register(const CInstance& instance);
+	CWindowClass& Dialog();
+	CWindowClass& WithIcon(int icon);
+	CWindowClass& WithSmallIcon(int smallIcon);
+	CWindowClass& WithMenu(int menu);
+	CWindowClass& WithClassName(LPCTSTR className);
 };
 } // namespace WinObj
 #endif // !defined(AFX_WINDOWCLASS_H__7AD31414_B49C_4DD4_A32D_CE2DBA43D334__INCLUDED_)

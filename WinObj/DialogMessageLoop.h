@@ -17,10 +17,10 @@ namespace WinObj
 /// A message loop for an app that has a dialog as its main window.
 class CDialogMessageLoop : public CMessageLoop
 {
-	CDialog &_dialog;
+	CDialog& _dialog;
 
 public:
-	CDialogMessageLoop(CDialog &dialog);
+	CDialogMessageLoop(CDialog& dialog);
 	virtual ~CDialogMessageLoop();
 
 protected:

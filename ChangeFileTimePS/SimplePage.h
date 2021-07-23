@@ -42,14 +42,14 @@ private:
 	void recurseThat(LPCTSTR szDir);
 	int RecurseMode();
 	string_list mylist;
-	string_list *templist;
+	string_list* templist;
 	bool hasfolders;
 	int recurseMode;
 	TCHAR recurseFilter[MAX_PATH];
 	UINT bInitArchive, bInitReadOnly, bInitHidden, bInitSystem;
 
 public:
-	CSimplePage(string_list &otherList, bool hasfolders) : CPropertyPageDialog()
+	CSimplePage(string_list& otherList, bool hasfolders) : CPropertyPageDialog()
 	{
 		int it;
 
@@ -431,7 +431,7 @@ public:
 		} while (test < 2000);
 	}
 
-	void checkFileAttribute(DWORD attrs, DWORD attrBit, UINT *value, bool firstTime)
+	void checkFileAttribute(DWORD attrs, DWORD attrBit, UINT* value, bool firstTime)
 	{
 		UINT test;
 
@@ -498,7 +498,7 @@ public:
 			BUTTON_HANDLER_RANGE(IDC_NOW1, IDC_NOW3, OnNowClick);
 			break;
 		case WM_NOTIFY: {
-			NMHDR *phdr = (NMHDR *)lParam;
+			NMHDR* phdr = (NMHDR*)lParam;
 
 			switch (phdr->code)
 			{

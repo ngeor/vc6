@@ -30,7 +30,7 @@ extern CComModule _Module;
 class string_list
 {
 private:
-	LPTSTR *data;
+	LPTSTR* data;
 	int size;
 	int capacity;
 
@@ -38,7 +38,7 @@ private:
 	{
 		if (reqsize > capacity)
 		{
-			LPTSTR *temp = new LPTSTR[capacity = reqsize * 2];
+			LPTSTR* temp = new LPTSTR[capacity = reqsize * 2];
 			for (int i = 0; i < size; i++)
 				temp[i] = data[i];
 			for (int j = size; j < capacity; j++)

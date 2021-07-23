@@ -14,7 +14,7 @@
 HINSTANCE hInst;                     // current instance
 TCHAR szTitle[MAX_LOADSTRING];       // The title bar text
 TCHAR szWindowClass[MAX_LOADSTRING]; // The title bar text
-GWindowManager *list1;
+GWindowManager* list1;
 
 // Foward declarations of functions included in this code module:
 ATOM MyRegisterClass(HINSTANCE hInstance);
@@ -133,7 +133,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	int wmId, wmEvent;
 	PAINTSTRUCT ps;
 	HDC hdc;
-	GCanvasW32 *canvas;
+	GCanvasW32* canvas;
 
 	switch (message)
 	{
@@ -167,9 +167,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		while (list1->CurrData())
 		{
 			canvas = new GCanvasW32(hdc);
-			((GWindow *)list1->CurrData())->GetWindowRect(&rt);
+			((GWindow*)list1->CurrData())->GetWindowRect(&rt);
 			canvas->SetClippingRect(&rt);
-			((GWindow *)list1->CurrData())->Paint(canvas);
+			((GWindow*)list1->CurrData())->Paint(canvas);
 			delete canvas;
 			list1->GotoNext();
 		}

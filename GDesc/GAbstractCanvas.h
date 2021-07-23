@@ -25,7 +25,7 @@ public:
 
 	virtual void SetTextTransparent(BOOL fTransparent)                      = 0;
 	virtual BOOL IsTextTransparent()                                        = 0;
-	virtual void GetTextExtent(LPCTSTR szBuf, int length, int *cx, int *cy) = 0;
+	virtual void GetTextExtent(LPCTSTR szBuf, int length, int* cx, int* cy) = 0;
 	GAbstractCanvas();
 	virtual ~GAbstractCanvas();
 };

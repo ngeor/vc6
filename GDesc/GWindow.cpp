@@ -29,7 +29,7 @@ void GWindow::GetWindowRect(LPRECT lpRect)
 	lpRect->bottom = FTop + FHeight;
 }
 
-void GWindow::Paint(GAbstractCanvas *canvas)
+void GWindow::Paint(GAbstractCanvas* canvas)
 {
 	int cx, cy;
 	canvas->Rectangle(FLeft, FTop, FLeft + FWidth, FTop + FHeight);

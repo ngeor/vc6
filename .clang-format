@@ -18,3 +18,5 @@ AlignConsecutiveAssignments: Consecutive
 AlignConsecutiveMacros: Consecutive
 AccessModifierOffset: -4
 AlignTrailingComments: true
+DerivePointerAlignment: false
+PointerAlignment: Left

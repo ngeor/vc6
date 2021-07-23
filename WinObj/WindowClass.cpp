@@ -22,38 +22,38 @@ CWindowClass::~CWindowClass()
 {
 }
 
-CWindowClass &CWindowClass::Dialog()
+CWindowClass& CWindowClass::Dialog()
 {
 	_wcex.lpfnWndProc = (WNDPROC)DefDlgProc;
 	_wcex.cbWndExtra  = DLGWINDOWEXTRA;
 	return *this;
 }
 
-CWindowClass &CWindowClass::WithIcon(int icon)
+CWindowClass& CWindowClass::WithIcon(int icon)
 {
 	_icon = icon;
 	return *this;
 }
 
-CWindowClass &CWindowClass::WithSmallIcon(int smallIcon)
+CWindowClass& CWindowClass::WithSmallIcon(int smallIcon)
 {
 	_smallIcon = smallIcon;
 	return *this;
 }
 
-CWindowClass &CWindowClass::WithMenu(int menu)
+CWindowClass& CWindowClass::WithMenu(int menu)
 {
 	_menu = menu;
 	return *this;
 }
 
-CWindowClass &CWindowClass::WithClassName(LPCTSTR className)
+CWindowClass& CWindowClass::WithClassName(LPCTSTR className)
 {
 	_className = className;
 	return *this;
 }
 
-void CWindowClass::Register(const CInstance &instance)
+void CWindowClass::Register(const CInstance& instance)
 {
 	HINSTANCE hInstance = instance.GetHandle();
 	_wcex.hInstance     = hInstance;

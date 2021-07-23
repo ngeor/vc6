@@ -40,7 +40,7 @@ public:
 
 	UINT GetDlgItemText(int id, LPTSTR buffer, int maxCharacters);
 
-	UINT GetDlgItemInt(int id, bool *translated, bool bSigned);
+	UINT GetDlgItemInt(int id, bool* translated, bool bSigned);
 
 	int GetDlgItemTextLength(int id);
 

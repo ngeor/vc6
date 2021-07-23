@@ -11,7 +11,7 @@ namespace WinObj
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CDialogMessageLoop::CDialogMessageLoop(CDialog &dialog) : _dialog(dialog)
+CDialogMessageLoop::CDialogMessageLoop(CDialog& dialog) : _dialog(dialog)
 {
 }
 

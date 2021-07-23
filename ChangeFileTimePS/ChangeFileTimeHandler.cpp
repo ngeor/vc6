@@ -55,7 +55,7 @@ HRESULT CChangeFileTimeHandler::AddPages(LPFNADDPROPSHEETPAGE lpfnAddPage, LPARA
 	InitCommonControlsEx(&ic);
 
 	PROPSHEETPAGE p;
-	CSimplePage *newPage = new CSimplePage(filelist, hasfolders);
+	CSimplePage* newPage = new CSimplePage(filelist, hasfolders);
 	ZeroMemory(&p, sizeof(p));
 	p.dwSize      = sizeof(p);
 	p.dwFlags     = PSP_USEICONID;

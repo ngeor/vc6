@@ -72,7 +72,7 @@ UINT CWnd::GetDlgItemText(int id, LPTSTR buffer, int maxCharacters)
 	return ::GetDlgItemText(GetHandle(), id, buffer, maxCharacters);
 }
 
-UINT CWnd::GetDlgItemInt(int id, bool *translated, bool bSigned)
+UINT CWnd::GetDlgItemInt(int id, bool* translated, bool bSigned)
 {
 	BOOL bTranslated;
 	UINT result = ::GetDlgItemInt(GetHandle(), id, &bTranslated, bSigned);

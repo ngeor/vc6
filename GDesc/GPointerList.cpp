@@ -19,7 +19,7 @@ GPointerList::~GPointerList()
 	Clear();
 }
 
-void GPointerList::Add(void *data)
+void GPointerList::Add(void* data)
 {
 	LPLIST_NODE q;
 	q       = (LPLIST_NODE)malloc(sizeof(LIST_NODE));
@@ -57,7 +57,7 @@ void GPointerList::GotoNext()
 	curr = curr->next;
 }
 
-void *GPointerList::CurrData()
+void* GPointerList::CurrData()
 {
 	return (curr) ? curr->info : NULL;
 }

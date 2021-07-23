@@ -15,7 +15,7 @@ class GCanvasW32 : public GAbstractCanvas
 {
 public:
 	virtual void SetClippingRect(LPRECT lpRect);
-	virtual void GetTextExtent(LPCTSTR szBuf, int length, int *cx, int *cy);
+	virtual void GetTextExtent(LPCTSTR szBuf, int length, int* cx, int* cy);
 	virtual void SetTextTransparent(BOOL fTransparent);
 	virtual BOOL IsTextTransparent();
 	virtual void TextOut(LPCTSTR string, int length, int x, int y);

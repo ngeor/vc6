@@ -36,10 +36,10 @@ public:
 class xcpufreqFrame : public wxFrame
 {
 public:
-	xcpufreqFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
-	void OnQuit(wxCommandEvent &event);
-	void OnAbout(wxCommandEvent &event);
-	void OnTimer(wxTimerEvent &event);
+	xcpufreqFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
+	void OnQuit(wxCommandEvent& event);
+	void OnAbout(wxCommandEvent& event);
+	void OnTimer(wxTimerEvent& event);
 
 private:
 	wxDECLARE_EVENT_TABLE();

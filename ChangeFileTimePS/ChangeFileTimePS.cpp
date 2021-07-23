@@ -47,7 +47,7 @@ STDAPI DllCanUnloadNow(void)
 /////////////////////////////////////////////////////////////////////////////
 // Returns a class factory to create an object of the requested type
 
-STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID *ppv)
+STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 {
 	return _Module.GetClassObject(rclsid, riid, ppv);
 }

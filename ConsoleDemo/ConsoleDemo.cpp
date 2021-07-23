@@ -5,7 +5,7 @@
 #include "..\DynamicLibraryDemo\DynamicLibraryDemo.h"
 #include "..\StaticLibraryDemo\StaticLibraryDemo.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 	printf("Hello World!\n");
 	int x = Add(1, 3);

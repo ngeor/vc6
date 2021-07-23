@@ -15,9 +15,9 @@
 class GWindowManager : public GPointerList
 {
 public:
-	GWindow *WindowFromPoint(int x, int y);
-	GWindow *GetActiveWindow();
-	GWindow *Add(LPCTSTR szCaption, int left, int top, int width, int height);
+	GWindow* WindowFromPoint(int x, int y);
+	GWindow* GetActiveWindow();
+	GWindow* Add(LPCTSTR szCaption, int left, int top, int width, int height);
 	GWindowManager();
 	virtual ~GWindowManager();
 };

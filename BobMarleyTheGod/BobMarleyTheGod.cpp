@@ -21,9 +21,9 @@ bool keepUp       = true;
 // Foward declarations of functions included in this code module:
 LRESULT CALLBACK ScreenSaverProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK About(HWND, UINT, WPARAM, LPARAM);
-void LoadPictureFile(LPCTSTR szFile, LPPICTURE *lpPic);
+void LoadPictureFile(LPCTSTR szFile, LPPICTURE* lpPic);
 void LoadMarleyPic();
-void ReadData(int *iSpeed, int *iSmoothness);
+void ReadData(int* iSpeed, int* iSmoothness);
 void WriteData(int iSpeed, int iSmoothness);
 
 /// <summary>
@@ -253,7 +253,7 @@ BOOL WINAPI RegisterDialogClasses(HANDLE hInst)
 }
 
 // This function loads a picture.
-void LoadPictureFile(LPCTSTR szFile, LPPICTURE *lpPic)
+void LoadPictureFile(LPCTSTR szFile, LPPICTURE* lpPic)
 {
 	// open file
 	HANDLE hFile = CreateFile(szFile, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
@@ -286,12 +286,12 @@ void LoadPictureFile(LPCTSTR szFile, LPPICTURE *lpPic)
 	// Create IPicture from image file
 	if (*lpPic)
 		(*lpPic)->Release();
-	hr = OleLoadPicture(pstm, dwFileSize, FALSE, IID_IPicture, (LPVOID *)lpPic);
+	hr = OleLoadPicture(pstm, dwFileSize, FALSE, IID_IPicture, (LPVOID*)lpPic);
 	//	ASSERT(SUCCEEDED(hr) && lpPic);
 	pstm->Release();
 }
 
-void ReadData(int *iSpeed, int *iSmoothness)
+void ReadData(int* iSpeed, int* iSmoothness)
 {
 	HKEY key1;
 	DWORD disp;
