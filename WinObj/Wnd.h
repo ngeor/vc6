@@ -42,7 +42,11 @@ public:
 
 	UINT GetDlgItemInt(int id, bool* translated, bool bSigned);
 
+	bool SetDlgItemInt(int id, int value, bool bSigned);
+
 	int GetDlgItemTextLength(int id);
+
+	bool GetDlgItemClientRect(int id, LPRECT rect);
 
 	LRESULT SendDlgItemMessage(int id, UINT msg, WPARAM wParam, LPARAM lParam);
 };

@@ -10,9 +10,11 @@
 #endif // _MSC_VER > 1000
 
 #include "Handle.h"
+#include "str.h"
 
 namespace WinObj
 {
+
 /// Encapsulates the HINSTANCE handle.
 class CInstance : public CHandle<HINSTANCE>
 {
@@ -21,9 +23,7 @@ public:
 	virtual ~CInstance();
 
 	/// Loads the specified string from resources.
-	/// The memory is allocated with `calloc`, so the
-	/// caller must use `free` when the string is no longer needed.
-	LPTSTR LoadString(int id) const;
+	str LoadStr(int id) const;
 };
 } // namespace WinObj
 

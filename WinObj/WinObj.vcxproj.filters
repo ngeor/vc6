@@ -45,6 +45,12 @@
     <ClInclude Include="Wnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OpenFileName.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="str.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StdAfx.cpp">
@@ -66,6 +72,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Wnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenFileName.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

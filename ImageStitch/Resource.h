@@ -4,7 +4,6 @@
 //
 #define IDS_OPEN_IMAGE_FILTER 1
 #define IDS_OPEN_FILTER       3
-#define IDS_DEF_EXT           4
 #define IDD_MAIN              101
 #define IDB_TOOLBAR           102
 #define ID_LST_ICONS          1000

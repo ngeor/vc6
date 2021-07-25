@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+#include "..\WinObj\WinObj.h"
 #include "resource.h"
 
 #define ID_TOOLBAR       500
@@ -9,17 +10,7 @@
 #define ID_CMD_OPEN_FILE 502
 #define ID_CMD_SAVE_FILE 503
 
-#define DECLARE_MSG_CRACK_RET(Name) LPARAM Name(HWND hWnd, WPARAM wParam, LPARAM lParam)
-#define DECLARE_MSG_CRACK(Name)     void Name(HWND hWnd, WPARAM wParam, LPARAM lParam)
-#define MSG_CRACK_RET(MsgName, ProcName)                                                                               \
-	case MsgName:                                                                                                      \
-		return ProcName(hWnd, wParam, lParam);
-#define MSG_CRACK(MsgName, ProcName)                                                                                   \
-	case MsgName:                                                                                                      \
-		ProcName(hWnd, wParam, lParam);                                                                                \
-		break;
-
-HINSTANCE hInst;
+#define DEFAULT_EXTENSION _T("isf")
 
 typedef struct ListEntry
 {
@@ -27,15 +18,37 @@ typedef struct ListEntry
 	HBITMAP hBitmap;
 } ListEntry;
 
-void DoOpenFile(HWND hWnd, LPCTSTR szFileName);
+class MainDialog : public WinObj::CDialog
+{
+	void OnInitDialog();
+	void OnClose();
+	void OnCommand(WPARAM wParam, LPARAM lParam);
+	void OnDeleteItem(WPARAM wParam, LPARAM lParam);
+	void OnDrawItem(LPARAM lParam);
+	void OnMeasureItem(LPARAM lParam);
+	void OnPaint();
+	void DoAddFile(LPCTSTR szFileName, LPCTSTR szPathName = NULL);
+	void OnCmdAdd();
+	void OnCmdRemove();
+	void OnCmdMoveLeft(int pos);
+	void OnCmdNewFile();
+	void DoOpenFile(LPCTSTR szFileName);
+	void OnCmdOpenFile();
+	void DoSaveFile(LPCTSTR szFileName);
+	void OnCmdSaveFile();
 
-DECLARE_MSG_CRACK_RET(OnInitDialog)
+public:
+	MainDialog(const WinObj::CInstance& instance);
+	virtual ~MainDialog();
+	virtual LRESULT OnMessage(UINT message, WPARAM wParam, LPARAM lParam);
+};
+
+void MainDialog::OnInitDialog()
 {
 	TBBUTTON tbb[3];
-
-	SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_SETCOLUMNWIDTH, 32, 0);
-	SetDlgItemInt(hWnd, ID_TXT_IMG_WIDTH, 16, FALSE);
-	SetDlgItemInt(hWnd, ID_TXT_IMG_HEIGHT, 16, FALSE);
+	SendDlgItemMessage(ID_LST_ICONS, LB_SETCOLUMNWIDTH, 32, 0);
+	SetDlgItemInt(ID_TXT_IMG_WIDTH, 16, false);
+	SetDlgItemInt(ID_TXT_IMG_HEIGHT, 16, false);
 
 	ZeroMemory(tbb, sizeof(tbb));
 	tbb[0].iBitmap   = 0;
@@ -53,23 +66,17 @@ DECLARE_MSG_CRACK_RET(OnInitDialog)
 	tbb[2].fsState   = TBSTATE_ENABLED;
 	tbb[2].fsStyle   = TBSTYLE_BUTTON;
 
-	CreateToolbarEx(hWnd, WS_CHILD | WS_VISIBLE, ID_TOOLBAR, 3 /* number of bitmaps */, hInst, IDB_TOOLBAR, tbb,
-	                3 /* number of buttons */, 1, 0, 16, 16, sizeof(TBBUTTON));
-
-	return 1;
+	CreateToolbarEx(GetHandle(), WS_CHILD | WS_VISIBLE, ID_TOOLBAR, 3 /* number of bitmaps */,
+	                GetInstance().GetHandle(), IDB_TOOLBAR, tbb, 3 /* number of buttons */, 1, 0, 16, 16,
+	                sizeof(TBBUTTON));
 }
 
-DECLARE_MSG_CRACK(OnClose)
+void MainDialog::OnClose()
 {
-	EndDialog(hWnd, 0);
+	EndDialog();
 }
 
-void Refresh(HWND hWnd)
-{
-	InvalidateRect(hWnd, NULL, TRUE);
-}
-
-void DoAddFile(HWND hWnd, LPCTSTR szFileName, LPCTSTR szPathName = NULL)
+void MainDialog::DoAddFile(LPCTSTR szFileName, LPCTSTR szPathName)
 {
 	ListEntry* le;
 	le = new ListEntry;
@@ -84,108 +91,75 @@ void DoAddFile(HWND hWnd, LPCTSTR szFileName, LPCTSTR szPathName = NULL)
 		lstrcpy(le->szPath, szFileName);
 	le->hBitmap = (HBITMAP)LoadImage(0, le->szPath, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 
-	SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_ADDSTRING, 0, (LPARAM)le);
+	SendDlgItemMessage(ID_LST_ICONS, LB_ADDSTRING, 0, (LPARAM)le);
 }
 
-void OnCmdAdd(HWND hWnd)
+void MainDialog::OnCmdAdd()
 {
-	OPENFILENAME of;
-	TCHAR szFilter[MAX_PATH];
-	TCHAR szFileName[MAX_PATH];
-	LPTSTR p;
-
-	// set filter string
-	LoadString(hInst, IDS_OPEN_IMAGE_FILTER, szFilter, MAX_PATH);
-	for (p = szFilter; *p != '\0'; p++)
-		if (*p == '|')
-			*p = '\0';
-	*(++p) = '\0';
-
-	// set file name to null
-	szFileName[0] = '\0';
-
-	// fill in OPENFILENAME structure
-	ZeroMemory(&of, sizeof(OPENFILENAME));
-	of.lStructSize  = sizeof(OPENFILENAME);
-	of.hwndOwner    = hWnd;
-	of.hInstance    = hInst;
-	of.lpstrFilter  = szFilter;
-	of.nFilterIndex = 1;
-	of.lpstrFile    = szFileName;
-	of.nMaxFile     = MAX_PATH;
-	of.Flags        = OFN_ALLOWMULTISELECT | OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
-
-	if (GetOpenFileName(&of))
+	WinObj::COpenFileName of(GetInstance(), *this);
+	of.WithFilter(IDS_OPEN_IMAGE_FILTER)
+		.WithFilterIndex(1)
+		.WithFlags(OFN_ALLOWMULTISELECT | OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY);
+	if (of.GetOpenFileName())
 	{
-		if (of.nFileOffset > lstrlen(of.lpstrFile))
+		LPCTSTR file = of.GetFile();
+		if (of.GetFileOffset() > _tcslen(file))
 		{
-			// multiple files
-			int nCount = 0;
-			LPTSTR q;
-
-			p = szFileName;
-
-			do
+			// multiple files, separated by null, first element in path, last element terminated with double null
+			LPCTSTR nextFile = file + of.GetFileOffset();
+			while (*nextFile != '\0')
 			{
-				q = p; // save start
-				while (*p != '\0')
-					p++;
-				if (q != p)
-				{
-					nCount++;
-					if (nCount >= 2)
-						DoAddFile(hWnd, q, szFileName);
-					p++;
-				}
-			} while (q != p);
+				DoAddFile(nextFile, file);
+				nextFile = nextFile + _tcslen(nextFile) + 1;
+			}
 		}
 		else
 		{
 			// single file
-			DoAddFile(hWnd, szFileName);
+			DoAddFile(file);
 		}
-		Refresh(hWnd);
+		InvalidateRect();
 	}
 }
 
-void OnCmdRemove(HWND hWnd)
+void MainDialog::OnCmdRemove()
 {
-	int nSel = SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETCURSEL, 0, 0);
+	int nSel = SendDlgItemMessage(ID_LST_ICONS, LB_GETCURSEL, 0, 0);
 	if (nSel >= 0)
 	{
-		SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_DELETESTRING, nSel, 0);
-		Refresh(hWnd);
+		SendDlgItemMessage(ID_LST_ICONS, LB_DELETESTRING, nSel, 0);
+		InvalidateRect();
 	}
 }
 
-void OnCmdMoveLeft(HWND hWnd, int pos)
+void MainDialog::OnCmdMoveLeft(int pos)
 {
-	int nSel = SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETCURSEL, 0, 0);
+	int nSel = SendDlgItemMessage(ID_LST_ICONS, LB_GETCURSEL, 0, 0);
 	if (nSel >= 0)
 	{
 		DWORD a, b;
-		int newSel, count = SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETCOUNT, 0, 0);
+		int newSel, count = SendDlgItemMessage(ID_LST_ICONS, LB_GETCOUNT, 0, 0);
 		newSel = (nSel + count + pos) % count;
 
-		a = SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETITEMDATA, nSel, 0);
-		b = SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETITEMDATA, newSel, 0);
+		a = SendDlgItemMessage(ID_LST_ICONS, LB_GETITEMDATA, nSel, 0);
+		b = SendDlgItemMessage(ID_LST_ICONS, LB_GETITEMDATA, newSel, 0);
 
-		SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_SETITEMDATA, nSel, b);
-		SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_SETITEMDATA, newSel, a);
+		SendDlgItemMessage(ID_LST_ICONS, LB_SETITEMDATA, nSel, b);
+		SendDlgItemMessage(ID_LST_ICONS, LB_SETITEMDATA, newSel, a);
 
-		SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_SETCURSEL, newSel, 0);
+		SendDlgItemMessage(ID_LST_ICONS, LB_SETCURSEL, newSel, 0);
 
-		Refresh(hWnd);
+		InvalidateRect();
 	}
 }
 
-void OnCmdNewFile(HWND hWnd)
+void MainDialog::OnCmdNewFile()
 {
-	SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_RESETCONTENT, 0, 0);
-	Refresh(hWnd);
+	SendDlgItemMessage(ID_LST_ICONS, LB_RESETCONTENT, 0, 0);
+	InvalidateRect();
 }
 
-void DoOpenFile(HWND hWnd, LPCTSTR szFileName)
+void MainDialog::DoOpenFile(LPCTSTR szFileName)
 {
 	FILE* fp;
 	TCHAR buf[MAX_PATH];
@@ -206,58 +180,32 @@ void DoOpenFile(HWND hWnd, LPCTSTR szFileName)
 #else
 	fp = _tfopen(p, _T("rt"));
 #endif
-	SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_RESETCONTENT, 0, 0);
+	SendDlgItemMessage(ID_LST_ICONS, LB_RESETCONTENT, 0, 0);
 	while (_fgetts(buf, MAX_PATH, fp) != NULL)
 	{
 		if ((p = _tcsrchr(buf, '\n')) != NULL)
 			*p = '\0';
 
-		DoAddFile(hWnd, buf);
+		DoAddFile(buf);
 	}
 	fclose(fp);
-	Refresh(hWnd);
+	InvalidateRect();
 }
 
-void OnCmdOpenFile(HWND hWnd)
+void MainDialog::OnCmdOpenFile()
 {
-	OPENFILENAME of;
-	TCHAR szFilter[MAX_PATH];
-	TCHAR szFileName[MAX_PATH];
-	TCHAR szDefExt[4];
-	LPTSTR p;
-
-	// set filter string
-	LoadString(hInst, IDS_OPEN_FILTER, szFilter, MAX_PATH);
-	for (p = szFilter; *p != '\0'; p++)
-		if (*p == '|')
-			*p = '\0';
-	*(++p) = '\0';
-
-	// set file name to null
-	szFileName[0] = '\0';
-
-	// load default extention
-	LoadString(hInst, IDS_DEF_EXT, szDefExt, 3);
-
-	// fill in OPENFILENAME structure
-	ZeroMemory(&of, sizeof(OPENFILENAME));
-	of.lStructSize  = sizeof(OPENFILENAME);
-	of.hwndOwner    = hWnd;
-	of.hInstance    = hInst;
-	of.lpstrFilter  = szFilter;
-	of.nFilterIndex = 1;
-	of.lpstrFile    = szFileName;
-	of.nMaxFile     = MAX_PATH;
-	of.lpstrDefExt  = szDefExt;
-	of.Flags        = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
-
-	if (GetOpenFileName(&of))
+	WinObj::COpenFileName of(GetInstance(), *this);
+	of.WithFilter(IDS_OPEN_FILTER)
+		.WithDefaultExtension(DEFAULT_EXTENSION)
+		.WithFilterIndex(1)
+		.WithFlags(OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY);
+	if (of.GetOpenFileName())
 	{
-		DoOpenFile(hWnd, szFileName);
+		DoOpenFile(of.GetFile());
 	}
 }
 
-void DoSaveFile(HWND hWnd, LPCTSTR szFileName)
+void MainDialog::DoSaveFile(LPCTSTR szFileName)
 {
 	FILE* fp;
 #if _MSC_VER > 1200
@@ -265,10 +213,10 @@ void DoSaveFile(HWND hWnd, LPCTSTR szFileName)
 #else
 	fp = _tfopen(szFileName, _T("tw"));
 #endif
-	int i, count = SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETCOUNT, 0, 0);
+	int i, count = SendDlgItemMessage(ID_LST_ICONS, LB_GETCOUNT, 0, 0);
 	for (i = 0; i < count; i++)
 	{
-		ListEntry* le = (ListEntry*)SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETITEMDATA, i, 0);
+		ListEntry* le = (ListEntry*)SendDlgItemMessage(ID_LST_ICONS, LB_GETITEMDATA, i, 0);
 #if _MSC_VER > 1200
 		_ftprintf_s(fp, _T("%s\n"), le->szPath);
 #else
@@ -278,46 +226,20 @@ void DoSaveFile(HWND hWnd, LPCTSTR szFileName)
 	fclose(fp);
 }
 
-void OnCmdSaveFile(HWND hWnd)
+void MainDialog::OnCmdSaveFile()
 {
-	OPENFILENAME of;
-	TCHAR szFilter[MAX_PATH];
-	TCHAR szFileName[MAX_PATH];
-	TCHAR szDefExt[4];
-	LPTSTR p;
-
-	// set filter string
-	LoadString(hInst, IDS_OPEN_FILTER, szFilter, MAX_PATH);
-	for (p = szFilter; *p != '\0'; p++)
-		if (*p == '|')
-			*p = '\0';
-	*(++p) = '\0';
-
-	// set file name to null
-	szFileName[0] = '\0';
-
-	// load default extention
-	LoadString(hInst, IDS_DEF_EXT, szDefExt, 3);
-
-	// fill in OPENFILENAME structure
-	ZeroMemory(&of, sizeof(OPENFILENAME));
-	of.lStructSize  = sizeof(OPENFILENAME);
-	of.hwndOwner    = hWnd;
-	of.hInstance    = hInst;
-	of.lpstrFilter  = szFilter;
-	of.nFilterIndex = 1;
-	of.lpstrFile    = szFileName;
-	of.nMaxFile     = MAX_PATH;
-	of.lpstrDefExt  = szDefExt;
-	of.Flags        = OFN_EXPLORER | OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY;
-
-	if (GetSaveFileName(&of))
+	WinObj::COpenFileName of(GetInstance(), *this);
+	of.WithFilter(IDS_OPEN_FILTER)
+		.WithDefaultExtension(DEFAULT_EXTENSION)
+		.WithFilterIndex(1)
+		.WithFlags(OFN_EXPLORER | OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY);
+	if (of.GetSaveFileName())
 	{
-		DoSaveFile(hWnd, szFileName);
+		DoSaveFile(of.GetFile());
 	}
 }
 
-DECLARE_MSG_CRACK(OnCommand)
+void MainDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	WORD wNotifyCode = HIWORD(wParam); // notification code
 	WORD wID         = LOWORD(wParam); // item, control, or accelerator identifier
@@ -326,32 +248,31 @@ DECLARE_MSG_CRACK(OnCommand)
 	switch (wID)
 	{
 	case ID_CMD_ADD:
-		OnCmdAdd(hWnd);
+		OnCmdAdd();
 		break;
 	case ID_CMD_REMOVE:
-		OnCmdRemove(hWnd);
+		OnCmdRemove();
 		break;
 	case ID_CMD_MOVE_LEFT:
-		OnCmdMoveLeft(hWnd, -1);
+		OnCmdMoveLeft(-1);
 		break;
 	case ID_CMD_MOVE_RIGHT:
-		OnCmdMoveLeft(hWnd, 1);
+		OnCmdMoveLeft(1);
 		break;
 	case ID_CMD_NEW_FILE:
-		OnCmdNewFile(hWnd);
+		OnCmdNewFile();
 		break;
 	case ID_CMD_OPEN_FILE:
-		OnCmdOpenFile(hWnd);
+		OnCmdOpenFile();
 		break;
 	case ID_CMD_SAVE_FILE:
-		OnCmdSaveFile(hWnd);
+		OnCmdSaveFile();
 		break;
 	}
 }
 
-DECLARE_MSG_CRACK(OnDeleteItem)
+void MainDialog::OnDeleteItem(WPARAM wParam, LPARAM lParam)
 {
-	int idCtl                = wParam;                     // control identifier
 	LPDELETEITEMSTRUCT lpdis = (LPDELETEITEMSTRUCT)lParam; // structure with item information
 	if (lpdis->CtlID == ID_LST_ICONS)
 	{
@@ -365,7 +286,7 @@ DECLARE_MSG_CRACK(OnDeleteItem)
 	}
 }
 
-DECLARE_MSG_CRACK(OnDrawItem)
+void MainDialog::OnDrawItem(LPARAM lParam)
 {
 	LPDRAWITEMSTRUCT lpdis = (LPDRAWITEMSTRUCT)lParam;
 	ListEntry* le          = (ListEntry*)lpdis->itemData;
@@ -423,34 +344,33 @@ DECLARE_MSG_CRACK(OnDrawItem)
 	}
 }
 
-DECLARE_MSG_CRACK(OnMeasureItem)
+void MainDialog::OnMeasureItem(LPARAM lParam)
 {
 	LPMEASUREITEMSTRUCT lpmis = (LPMEASUREITEMSTRUCT)lParam;
 	RECT rt;
-	GetClientRect(GetDlgItem(hWnd, ID_LST_ICONS), &rt);
+	GetDlgItemClientRect(ID_LST_ICONS, &rt);
 	lpmis->itemHeight = rt.bottom;
 }
 
-DECLARE_MSG_CRACK(OnPaint)
+void MainDialog::OnPaint()
 {
 	PAINTSTRUCT ps;
 	RECT clientRt;
 	SIZE imgSz;
 	int x, y, i, count;
-	BOOL success;
+	bool success;
 
-	BeginPaint(hWnd, &ps);
+	BeginPaint(&ps);
 
-	imgSz.cx = GetDlgItemInt(hWnd, ID_TXT_IMG_WIDTH, &success, FALSE);
+	imgSz.cx = GetDlgItemInt(ID_TXT_IMG_WIDTH, &success, FALSE);
 	if (success)
 	{
-		imgSz.cy = GetDlgItemInt(hWnd, ID_TXT_IMG_HEIGHT, &success, FALSE);
+		imgSz.cy = GetDlgItemInt(ID_TXT_IMG_HEIGHT, &success, FALSE);
 		if (success)
 		{
-			if ((count = SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETCOUNT, 0, 0)) > 0)
+			if ((count = SendDlgItemMessage(ID_LST_ICONS, LB_GETCOUNT, 0, 0)) > 0)
 			{
-				GetClientRect(hWnd, &clientRt);
-
+				GetClientRect(&clientRt);
 				y          = clientRt.bottom - 2 - imgSz.cy;
 				x          = 2;
 				HDC hMemDC = CreateCompatibleDC(0);
@@ -459,7 +379,7 @@ DECLARE_MSG_CRACK(OnPaint)
 
 				for (i = 0; i < count; i++, x += imgSz.cx)
 				{
-					le = (ListEntry*)SendDlgItemMessage(hWnd, ID_LST_ICONS, LB_GETITEMDATA, i, 0);
+					le = (ListEntry*)SendDlgItemMessage(ID_LST_ICONS, LB_GETITEMDATA, i, 0);
 					if (le != NULL && le->hBitmap != NULL)
 					{
 						SelectObject(hMemDC, le->hBitmap);
@@ -503,27 +423,54 @@ DECLARE_MSG_CRACK(OnPaint)
 		}
 	}
 
-	EndPaint(hWnd, &ps);
+	EndPaint(&ps);
 }
 
-LPARAM CALLBACK MainDlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+MainDialog::MainDialog(const WinObj::CInstance& instance) : WinObj::CDialog(instance)
+{
+}
+
+MainDialog::~MainDialog()
+{
+}
+
+LRESULT MainDialog::OnMessage(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
-		MSG_CRACK_RET(WM_INITDIALOG, OnInitDialog);
-		MSG_CRACK(WM_CLOSE, OnClose);
-		MSG_CRACK(WM_COMMAND, OnCommand);
-		MSG_CRACK(WM_DELETEITEM, OnDeleteItem);
-		MSG_CRACK(WM_DRAWITEM, OnDrawItem);
-		MSG_CRACK(WM_MEASUREITEM, OnMeasureItem);
-		MSG_CRACK(WM_PAINT, OnPaint);
+	case WM_INITDIALOG:
+		OnInitDialog();
+		return 1;
+		break;
+	case WM_CLOSE:
+		OnClose();
+		break;
+	case WM_COMMAND:
+		OnCommand(wParam, lParam);
+		break;
+	case WM_DELETEITEM:
+		OnDeleteItem(wParam, lParam);
+		break;
+	case WM_DRAWITEM:
+		OnDrawItem(lParam);
+		break;
+	case WM_MEASUREITEM:
+		OnMeasureItem(lParam);
+		break;
+	case WM_PAINT:
+		OnPaint();
+		break;
+	default:
+		return 0;
+		break;
 	}
 	return 0;
 }
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	hInst = hInstance;
-	DialogBoxParam(hInstance, (LPCTSTR)IDD_MAIN, 0, (DLGPROC)MainDlgProc, (LPARAM)lpCmdLine);
+	WinObj::CInstance app(hInstance);
+	MainDialog dialog(app);
+	dialog.Modal(IDD_MAIN);
 	return 0;
 }

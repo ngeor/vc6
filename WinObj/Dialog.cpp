@@ -10,7 +10,7 @@ namespace WinObj
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CDialog::CDialog(const CInstance& instance, HWND hWnd) : CWnd(hWnd), _instance(instance)
+CDialog::CDialog(const CInstance& instance) : CWnd(NULL), _instance(instance)
 {
 }
 
@@ -29,6 +29,17 @@ LRESULT CALLBACK __InternalDialogBootstrapProc(HWND hWnd, UINT message, WPARAM w
 	switch (message)
 	{
 	case WM_INITDIALOG:
+		if (lParam)
+		{
+#if _MSC_VER > 1200
+			SetWindowLongPtr(hWnd, GWLP_USERDATA, lParam);
+#else
+			SetWindowLong(hWnd, GWL_USERDATA, lParam);
+#endif
+			dialog = (CDialog*)lParam;
+			dialog->SetHandle(hWnd);
+			return dialog->OnMessage(message, wParam, lParam);
+		}
 		return 1;
 	default:
 #if _MSC_VER > 1200
@@ -45,9 +56,27 @@ LRESULT CALLBACK __InternalDialogBootstrapProc(HWND hWnd, UINT message, WPARAM w
 	}
 }
 
+bool CDialog::Create(int dialogResource)
+{
+	HWND hWnd = ::CreateDialogParam(GetInstance().GetHandle(), MAKEINTRESOURCE(dialogResource), 0,
+	                                (DLGPROC)__InternalDialogBootstrapProc, (LPARAM)this);
+	return hWnd != NULL;
+}
+
+INT_PTR CDialog::Modal(int dialogResource)
+{
+	return ::DialogBoxParam(GetInstance().GetHandle(), MAKEINTRESOURCE(dialogResource), 0,
+	                        (DLGPROC)__InternalDialogBootstrapProc, (LPARAM)this);
+}
+
 LRESULT CDialog::OnMessage(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	return 0;
+}
+
+bool CDialog::EndDialog(INT_PTR result)
+{
+	return ::EndDialog(GetHandle(), result) != 0;
 }
 
 } // namespace WinObj

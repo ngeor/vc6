@@ -18,6 +18,10 @@ CWindowClass::CWindowClass()
 	_wcex.style      = CS_HREDRAW | CS_VREDRAW;
 }
 
+CWindowClass::CWindowClass(const CWindowClass& other)
+{
+}
+
 CWindowClass::~CWindowClass()
 {
 }

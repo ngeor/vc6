@@ -29,6 +29,13 @@ public:
 	{
 		return _handle;
 	}
+
+	void SetHandle(T handle)
+	{
+		assert(_handle == NULL);
+		assert(handle);
+		_handle = handle;
+	}
 };
 } // namespace WinObj
 

@@ -25,14 +25,13 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 		.Register(app);
 
 	// create the main window
-	MainWindow *mainWindow = WinObj::BuildDialog<MainWindow>(app, IDD_MAIN);
-	mainWindow->Show();
+	MainWindow mainWindow(app);
+	mainWindow.Create(IDD_MAIN);
+	mainWindow.Show();
 
 	// message loop
-	WinObj::CDialogMessageLoop messageLoop(*mainWindow);
+	WinObj::CDialogMessageLoop messageLoop(mainWindow);
 	WPARAM result = messageLoop.Run();
 
-	// TODO improve instance management
-	delete mainWindow;
 	return result;
 }

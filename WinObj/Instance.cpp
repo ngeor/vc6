@@ -20,22 +20,19 @@ CInstance::~CInstance()
 {
 }
 
-LPTSTR CInstance::LoadString(int id) const
+str CInstance::LoadStr(int id) const
 {
 	HINSTANCE hInstance = GetHandle();
 #if _MSC_VER > 1200
 	LPTSTR readOnlyBuffer;
+	// get a read-only buffer into the string resource
 	int len = ::LoadString(hInstance, id, (LPTSTR)&readOnlyBuffer, 0);
-	// because readOnlyBuffer isn't guaranteed to be null terminated
-	LPTSTR result = (LPTSTR)calloc(sizeof(TCHAR), len + 1);
-	_tcsncpy_s(result, len + 1, readOnlyBuffer, len);
+	return str(readOnlyBuffer, len);
 #else
 	TCHAR buffer[256];
-	int len       = ::LoadString(hInstance, id, buffer, 256);
-	LPTSTR result = (LPTSTR)calloc(sizeof(TCHAR), len + 1);
-	_tcsncpy(result, buffer, len);
+	int len = ::LoadString(hInstance, id, buffer, 256);
+	return str(buffer, len);
 #endif
-	return result;
 }
 
 } // namespace WinObj
