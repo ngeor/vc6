@@ -25,8 +25,8 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 		.Register(app);
 
 	// create the main window
-	MainWindow mainWindow(app);
-	mainWindow.Create(IDD_MAIN);
+	MainWindow mainWindow;
+	mainWindow.Create(app, IDD_MAIN);
 	mainWindow.Show();
 
 	// message loop

@@ -18,31 +18,10 @@
     <ClInclude Include="StdAfx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Dialog.h">
+    <ClInclude Include="DateTimePicker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DialogMessageLoop.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Handle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Instance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MessageLoop.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowClass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WinObj.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Wnd.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="str.h">
+    <ClInclude Include="PropSheet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -50,22 +29,10 @@
     <ClCompile Include="StdAfx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Dialog.cpp">
+    <ClCompile Include="DateTimePicker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DialogMessageLoop.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Instance.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MessageLoop.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WindowClass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Wnd.cpp">
+    <ClCompile Include="PropSheet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

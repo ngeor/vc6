@@ -12,6 +12,10 @@ namespace WinObj
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
+CInstance::CInstance() : CHandle<HINSTANCE>()
+{
+}
+
 CInstance::CInstance(HINSTANCE instance) : CHandle<HINSTANCE>(instance)
 {
 }

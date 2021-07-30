@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+#include "..\WinObjCommDlg\OpenFileName.h"
 #include "..\WinObj\WinObj.h"
 #include "resource.h"
 
@@ -20,7 +21,6 @@ typedef struct ListEntry
 
 class MainDialog : public WinObj::CDialog
 {
-	void OnInitDialog();
 	void OnClose();
 	void OnCommand(WPARAM wParam, LPARAM lParam);
 	void OnDeleteItem(WPARAM wParam, LPARAM lParam);
@@ -38,12 +38,15 @@ class MainDialog : public WinObj::CDialog
 	void OnCmdSaveFile();
 
 public:
-	MainDialog(const WinObj::CInstance& instance);
+	MainDialog();
 	virtual ~MainDialog();
 	virtual LRESULT OnMessage(UINT message, WPARAM wParam, LPARAM lParam);
+
+protected:
+	virtual LRESULT OnInitDialog(LPARAM lParam);
 };
 
-void MainDialog::OnInitDialog()
+LRESULT MainDialog::OnInitDialog(LPARAM lParam)
 {
 	TBBUTTON tbb[3];
 	SendDlgItemMessage(ID_LST_ICONS, LB_SETCOLUMNWIDTH, 32, 0);
@@ -66,9 +69,11 @@ void MainDialog::OnInitDialog()
 	tbb[2].fsState   = TBSTATE_ENABLED;
 	tbb[2].fsStyle   = TBSTYLE_BUTTON;
 
+	// TODO: find a better way for GetInstance()->GetHandle()
 	CreateToolbarEx(GetHandle(), WS_CHILD | WS_VISIBLE, ID_TOOLBAR, 3 /* number of bitmaps */,
-	                GetInstance().GetHandle(), IDB_TOOLBAR, tbb, 3 /* number of buttons */, 1, 0, 16, 16,
+	                GetInstance()->GetHandle(), IDB_TOOLBAR, tbb, 3 /* number of buttons */, 1, 0, 16, 16,
 	                sizeof(TBBUTTON));
+	return 1;
 }
 
 void MainDialog::OnClose()
@@ -78,6 +83,7 @@ void MainDialog::OnClose()
 
 void MainDialog::DoAddFile(LPCTSTR szFileName, LPCTSTR szPathName)
 {
+	// TODO do not use lstr* functions
 	ListEntry* le;
 	le = new ListEntry;
 	if (szPathName != NULL)
@@ -96,7 +102,8 @@ void MainDialog::DoAddFile(LPCTSTR szFileName, LPCTSTR szPathName)
 
 void MainDialog::OnCmdAdd()
 {
-	WinObj::COpenFileName of(GetInstance(), *this);
+	// TODO: find a better way for this constructor
+	WinObj::COpenFileName of(*GetInstance(), *this);
 	of.WithFilter(IDS_OPEN_IMAGE_FILTER)
 		.WithFilterIndex(1)
 		.WithFlags(OFN_ALLOWMULTISELECT | OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY);
@@ -194,7 +201,7 @@ void MainDialog::DoOpenFile(LPCTSTR szFileName)
 
 void MainDialog::OnCmdOpenFile()
 {
-	WinObj::COpenFileName of(GetInstance(), *this);
+	WinObj::COpenFileName of(*GetInstance(), *this);
 	of.WithFilter(IDS_OPEN_FILTER)
 		.WithDefaultExtension(DEFAULT_EXTENSION)
 		.WithFilterIndex(1)
@@ -228,7 +235,7 @@ void MainDialog::DoSaveFile(LPCTSTR szFileName)
 
 void MainDialog::OnCmdSaveFile()
 {
-	WinObj::COpenFileName of(GetInstance(), *this);
+	WinObj::COpenFileName of(*GetInstance(), *this);
 	of.WithFilter(IDS_OPEN_FILTER)
 		.WithDefaultExtension(DEFAULT_EXTENSION)
 		.WithFilterIndex(1)
@@ -426,7 +433,7 @@ void MainDialog::OnPaint()
 	EndPaint(&ps);
 }
 
-MainDialog::MainDialog(const WinObj::CInstance& instance) : WinObj::CDialog(instance)
+MainDialog::MainDialog() : WinObj::CDialog()
 {
 }
 
@@ -438,10 +445,6 @@ LRESULT MainDialog::OnMessage(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
-	case WM_INITDIALOG:
-		OnInitDialog();
-		return 1;
-		break;
 	case WM_CLOSE:
 		OnClose();
 		break;
@@ -461,7 +464,7 @@ LRESULT MainDialog::OnMessage(UINT message, WPARAM wParam, LPARAM lParam)
 		OnPaint();
 		break;
 	default:
-		return 0;
+		return CDialog::OnMessage(message, wParam, lParam);
 		break;
 	}
 	return 0;
@@ -470,7 +473,7 @@ LRESULT MainDialog::OnMessage(UINT message, WPARAM wParam, LPARAM lParam)
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	WinObj::CInstance app(hInstance);
-	MainDialog dialog(app);
-	dialog.Modal(IDD_MAIN);
+	MainDialog dialog;
+	dialog.Modal(app, IDD_MAIN);
 	return 0;
 }

@@ -19,6 +19,7 @@ namespace WinObj
 class CInstance : public CHandle<HINSTANCE>
 {
 public:
+	CInstance();
 	CInstance(HINSTANCE instance);
 	virtual ~CInstance();
 

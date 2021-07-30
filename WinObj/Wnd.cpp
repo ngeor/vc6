@@ -116,4 +116,50 @@ bool CWnd::GetDlgItemClientRect(int id, LPRECT rect)
 	}
 }
 
+UINT CWnd::IsDlgButtonChecked(int dlgItem)
+{
+	return ::IsDlgButtonChecked(GetHandle(), dlgItem);
+}
+
+bool CWnd::CheckDlgButton(int dlgItem, UINT flags)
+{
+	return ::CheckDlgButton(GetHandle(), dlgItem, flags) != 0;
+}
+
+bool CWnd::CheckRadioButton(int first, int last, int checked)
+{
+	return ::CheckRadioButton(GetHandle(), first, last, checked) != 0;
+}
+
+bool CWnd::EnableDlgItem(int dlgItem, bool enable)
+{
+	HWND hChild = ::GetDlgItem(GetHandle(), dlgItem);
+	if (hChild != NULL)
+	{
+		return ::EnableWindow(hChild, enable) != 0;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool CWnd::ShowDlgItem(int dlgItem, int flags)
+{
+	HWND hChild = ::GetDlgItem(GetHandle(), dlgItem);
+	if (hChild != NULL)
+	{
+		return ::ShowWindow(hChild, flags) != 0;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+int CWnd::MsgBox(LPCTSTR text, LPCTSTR caption, UINT flags)
+{
+	return ::MessageBox(GetHandle(), text, caption, flags);
+}
+
 } // namespace WinObj

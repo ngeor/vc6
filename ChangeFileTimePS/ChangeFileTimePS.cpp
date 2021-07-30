@@ -5,7 +5,6 @@
 //      run nmake -f ChangeFileTimePSps.mk in the project directory.
 
 #include "stdafx.h"
-#include <initguid.h>
 #if _MSC_VER > 1200
 #include "ChangeFileTimePS_h.h"
 #else
@@ -13,6 +12,7 @@
 #endif
 #include "ChangeFileTimePS_i.c"
 #include "ChangeFileTimeHandler.h"
+#include "GlobalWinObjInstance.h"
 #include "resource.h"
 
 CComModule _Module;
@@ -30,9 +30,13 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpR
 	{
 		_Module.Init(ObjectMap, hInstance, &LIBID_CHANGEFILETIMEPSLib);
 		DisableThreadLibraryCalls(hInstance);
+		_WinObjInstance.SetHandle(hInstance);
 	}
 	else if (dwReason == DLL_PROCESS_DETACH)
+	{
 		_Module.Term();
+		_WinObjInstance.Detach();
+	}
 	return TRUE; // ok
 }
 

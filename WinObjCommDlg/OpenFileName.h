@@ -9,9 +9,9 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "Instance.h"
-#include "Wnd.h"
-#include "str.h"
+#include "..\WinObj\Instance.h"
+#include "..\WinObj\Wnd.h"
+#include "..\WinObj\str.h"
 
 namespace WinObj
 {

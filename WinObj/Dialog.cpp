@@ -10,16 +10,31 @@ namespace WinObj
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CDialog::CDialog(const CInstance& instance) : CWnd(NULL), _instance(instance)
+CDialog::CDialog() : CWnd(NULL), _instance(NULL)
 {
 }
 
 CDialog::~CDialog()
 {
+	if (_instance != NULL)
+	{
+		delete _instance;
+	}
 }
 
-const CInstance& CDialog::GetInstance() const
+const CInstance* CDialog::GetInstance()
 {
+	if (_instance == NULL)
+	{
+		HINSTANCE hInstance;
+#if _MSC_VER > 1200
+		hInstance = (HINSTANCE)GetWindowLongPtr(GetHandle(), GWLP_HINSTANCE);
+#else
+		hInstance = (HINSTANCE)GetWindowLong(GetHandle(), GWL_HINSTANCE);
+#endif
+		_instance = new CInstance(hInstance);
+	}
+
 	return _instance;
 }
 
@@ -56,27 +71,53 @@ LRESULT CALLBACK __InternalDialogBootstrapProc(HWND hWnd, UINT message, WPARAM w
 	}
 }
 
-bool CDialog::Create(int dialogResource)
+bool CDialog::Create(const CInstance& instance, int dialogResource)
 {
-	HWND hWnd = ::CreateDialogParam(GetInstance().GetHandle(), MAKEINTRESOURCE(dialogResource), 0,
+	HWND hWnd = ::CreateDialogParam(instance.GetHandle(), MAKEINTRESOURCE(dialogResource), 0,
 	                                (DLGPROC)__InternalDialogBootstrapProc, (LPARAM)this);
 	return hWnd != NULL;
 }
 
-INT_PTR CDialog::Modal(int dialogResource)
+INT_PTR CDialog::Modal(const CInstance& instance, const CWnd& parent, int dialogResource)
 {
-	return ::DialogBoxParam(GetInstance().GetHandle(), MAKEINTRESOURCE(dialogResource), 0,
+	return ::DialogBoxParam(instance.GetHandle(), MAKEINTRESOURCE(dialogResource), parent.GetHandle(),
+	                        (DLGPROC)__InternalDialogBootstrapProc, (LPARAM)this);
+}
+
+INT_PTR CDialog::Modal(const CInstance& instance, int dialogResource)
+{
+	return ::DialogBoxParam(instance.GetHandle(), MAKEINTRESOURCE(dialogResource), 0,
 	                        (DLGPROC)__InternalDialogBootstrapProc, (LPARAM)this);
 }
 
 LRESULT CDialog::OnMessage(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return 0;
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return OnInitDialog(lParam);
+	default:
+		return 0;
+	}
+}
+
+LRESULT CDialog::OnInitDialog(LPARAM lParam)
+{
+	return 1;
 }
 
 bool CDialog::EndDialog(INT_PTR result)
 {
 	return ::EndDialog(GetHandle(), result) != 0;
+}
+
+void CDialog::SetDialogMessageResult(LPARAM result)
+{
+#if _MSC_VER > 1200
+	SetWindowLongPtr(GetHandle(), DWLP_MSGRESULT, result);
+#else
+	SetWindowLong(GetHandle(), DWL_MSGRESULT, result);
+#endif
 }
 
 } // namespace WinObj

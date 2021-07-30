@@ -153,11 +153,9 @@
   <ItemGroup>
     <ClInclude Include="Dialog.h" />
     <ClInclude Include="DialogMessageLoop.h" />
-    <ClInclude Include="framework.h" />
     <ClInclude Include="Handle.h" />
     <ClInclude Include="Instance.h" />
     <ClInclude Include="MessageLoop.h" />
-    <ClInclude Include="OpenFileName.h" />
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="str.h" />
     <ClInclude Include="WindowClass.h" />
@@ -169,7 +167,6 @@
     <ClCompile Include="DialogMessageLoop.cpp" />
     <ClCompile Include="Instance.cpp" />
     <ClCompile Include="MessageLoop.cpp" />
-    <ClCompile Include="OpenFileName.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

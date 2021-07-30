@@ -17,21 +17,27 @@ namespace WinObj
 /// Encapsulates a dialog window.
 class CDialog : public CWnd
 {
-	const CInstance& _instance;
+	CInstance* _instance;
 
 public:
-	CDialog(const CInstance& instance);
+	CDialog();
 	virtual ~CDialog();
-	bool Create(int dialogResource);
-	INT_PTR Modal(int dialogResource);
+	bool Create(const CInstance& instance, int dialogResource);
+	INT_PTR Modal(const CInstance& instance, int dialogResource);
+	INT_PTR Modal(const CInstance& instance, const CWnd& parent, int dialogResource);
 
 	/// Message handler for the dialog.
 	virtual LRESULT OnMessage(UINT message, WPARAM wParam, LPARAM lParam);
 
+protected:
+	virtual LRESULT OnInitDialog(LPARAM lParam);
+
 	/// Gets the application instance.
-	const CInstance& GetInstance() const;
+	const CInstance* GetInstance();
 
 	bool EndDialog(INT_PTR result = 0);
+
+	void SetDialogMessageResult(LPARAM result);
 };
 
 } // namespace WinObj

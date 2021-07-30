@@ -1,21 +1,22 @@
 #include "StdAfx.h"
 #include "About.h"
 
+AboutDialog::AboutDialog() : CDialog() {}
+
+AboutDialog::~AboutDialog() {}
+
 // Mesage handler for about box.
-LRESULT CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT AboutDialog::OnMessage(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
-		case WM_INITDIALOG:
-			return TRUE;
-
 		case WM_COMMAND:
 			if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
 			{
-				EndDialog(hDlg, LOWORD(wParam));
+				EndDialog(LOWORD(wParam));
 				return TRUE;
 			}
 			break;
 	}
-	return FALSE;
+	return CDialog::OnMessage(message, wParam, lParam);
 }

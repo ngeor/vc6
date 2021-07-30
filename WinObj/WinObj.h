@@ -9,7 +9,6 @@
 #include "DialogMessageLoop.h"
 #include "Instance.h"
 #include "MessageLoop.h"
-#include "OpenFileName.h"
 #include "WindowClass.h"
 #include "Wnd.h"
 #include "str.h"

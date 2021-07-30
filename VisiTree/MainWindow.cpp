@@ -3,11 +3,11 @@
 #include "About.h"
 #include "Render.h"
 #include "resource.h"
+#include "..\WinObjCommDlg\OpenFileName.h"
 
 #define DEFAULT_EXTENSION _T("emf")
 
-MainWindow::MainWindow(const WinObj::CInstance &instance)
-	: WinObj::CDialog(instance)
+MainWindow::MainWindow() : WinObj::CDialog()
 {
 	myTree = treeFactory.Create(TreeTypeSearch, KeyTypeInteger);
 }
@@ -81,7 +81,7 @@ void MainWindow::OpenTreeFile(LPCTSTR szFile)
 
 void MainWindow::OnOpenTreeFile()
 {
-	WinObj::COpenFileName of(GetInstance(), *this);
+	WinObj::COpenFileName of(*GetInstance(), *this);
 	of.WithFilter(IDS_OPEN_FILTER)
 		.WithDefaultExtension(DEFAULT_EXTENSION)
 		.WithFlags(OFN_HIDEREADONLY | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST);
@@ -98,7 +98,7 @@ void MainWindow::OnSaveMetafile()
 		return;
 	}
 
-	WinObj::COpenFileName of(GetInstance(), *this);
+	WinObj::COpenFileName of(*GetInstance(), *this);
 	of.WithFilter(IDS_OPEN_FILTER)
 		.WithDefaultExtension(DEFAULT_EXTENSION)
 		.WithFlags(OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT);
@@ -256,7 +256,7 @@ int MainWindow::CbSetItemData(int id, int index, LPARAM data)
 void MainWindow::CbAddKeyType(int keyType)
 {
 	const int STRING_OFFSET = 100;
-	str buffer              = GetInstance().LoadStr(STRING_OFFSET + keyType);
+	str buffer              = GetInstance()->LoadStr(STRING_OFFSET + keyType);
 	LPCTSTR msg =
 		buffer.length() > 0 ? buffer.c_str() : _T("Failed to load string");
 	CbSetItemData(ID_KEYTYPE, CbAddString(ID_KEYTYPE, msg), keyType);
@@ -270,11 +270,11 @@ LRESULT MainWindow::OnCommand(UINT message, WPARAM wParam, LPARAM lParam)
 	switch (id)
 	{
 		case ID_ABOUT:
-			DialogBox(GetInstance().GetHandle(),
-					  (LPCTSTR)IDD_ABOUTBOX,
-					  GetHandle(),
-					  (DLGPROC)About);
-			break;
+		{
+			AboutDialog aboutDialog;
+			aboutDialog.Modal(*GetInstance(), *this, IDD_ABOUTBOX);
+		}
+		break;
 		case ID_EXIT:
 			DestroyWindow();
 			break;
@@ -342,15 +342,6 @@ LRESULT MainWindow::OnMessage(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
-		case WM_INITDIALOG:
-			CbAddKeyType(KeyTypeInteger);
-			CbAddKeyType(KeyTypeFloat);
-			CbAddKeyType(KeyTypeChar);
-			CbAddKeyType(KeyTypeString);
-
-			KeyTypeChanged(myTree->GetKeyType());
-			TreeTypeChanged(myTree->GetTreeType());
-			return 1;
 		case WM_SIZE:
 			SizeControls();
 			break;
@@ -376,7 +367,19 @@ LRESULT MainWindow::OnMessage(UINT message, WPARAM wParam, LPARAM lParam)
 			PostQuitMessage(0);
 			break;
 		default:
-			return 0;
+			return CDialog::OnMessage(message, wParam, lParam);
 	}
 	return 0;
+}
+
+LRESULT MainWindow::OnInitDialog(LPARAM lParam)
+{
+	CbAddKeyType(KeyTypeInteger);
+	CbAddKeyType(KeyTypeFloat);
+	CbAddKeyType(KeyTypeChar);
+	CbAddKeyType(KeyTypeString);
+
+	KeyTypeChanged(myTree->GetKeyType());
+	TreeTypeChanged(myTree->GetTreeType());
+	return 1;
 }

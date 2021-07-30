@@ -3,8 +3,8 @@
 //      are changed infrequently
 //
 
-#if !defined(AFX_STDAFX_H__C57DF0CA_5623_48B3_B805_0A40CB9BA057__INCLUDED_)
-#define AFX_STDAFX_H__C57DF0CA_5623_48B3_B805_0A40CB9BA057__INCLUDED_
+#if !defined(AFX_STDAFX_H__A80E939F_9E0A_4AF6_85CB_989DD167F7EE__INCLUDED_)
+#define AFX_STDAFX_H__A80E939F_9E0A_4AF6_85CB_989DD167F7EE__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
@@ -14,13 +14,10 @@
 
 #include <windows.h>
 #include <assert.h>
-#include <malloc.h>
+#include <commctrl.h>
 #include <string>
-#include <tchar.h>
-
-// TODO: reference additional headers your program requires here
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_STDAFX_H__C57DF0CA_5623_48B3_B805_0A40CB9BA057__INCLUDED_)
+#endif // !defined(AFX_STDAFX_H__A80E939F_9E0A_4AF6_85CB_989DD167F7EE__INCLUDED_)

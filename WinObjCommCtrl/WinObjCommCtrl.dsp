@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="WinObj" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="WinObjCommCtrl" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Static Library" 0x0104
 
-CFG=WinObj - Win32 Debug
+CFG=WinObjCommCtrl - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "WinObj.mak".
+!MESSAGE NMAKE /f "WinObjCommCtrl.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "WinObj.mak" CFG="WinObj - Win32 Debug"
+!MESSAGE NMAKE /f "WinObjCommCtrl.mak" CFG="WinObjCommCtrl - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "WinObj - Win32 Release" (based on "Win32 (x86) Static Library")
-!MESSAGE "WinObj - Win32 Debug" (based on "Win32 (x86) Static Library")
+!MESSAGE "WinObjCommCtrl - Win32 Release" (based on "Win32 (x86) Static Library")
+!MESSAGE "WinObjCommCtrl - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -28,7 +28,7 @@ CFG=WinObj - Win32 Debug
 CPP=cl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "WinObj - Win32 Release"
+!IF  "$(CFG)" == "WinObjCommCtrl - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -51,7 +51,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo
 
-!ELSEIF  "$(CFG)" == "WinObj - Win32 Debug"
+!ELSEIF  "$(CFG)" == "WinObjCommCtrl - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -78,39 +78,23 @@ LIB32=link.exe -lib
 
 # Begin Target
 
-# Name "WinObj - Win32 Release"
-# Name "WinObj - Win32 Debug"
+# Name "WinObjCommCtrl - Win32 Release"
+# Name "WinObjCommCtrl - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\Dialog.cpp
+SOURCE=.\DateTimePicker.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\DialogMessageLoop.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Instance.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\MessageLoop.cpp
+SOURCE=.\PropSheet.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\WindowClass.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Wnd.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -118,43 +102,15 @@ SOURCE=.\Wnd.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\Dialog.h
+SOURCE=.\DateTimePicker.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\DialogMessageLoop.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Handle.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Instance.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\MessageLoop.h
+SOURCE=.\PropSheet.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\StdAfx.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\str.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\WindowClass.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\WinObj.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Wnd.h
 # End Source File
 # End Group
 # Begin Source File

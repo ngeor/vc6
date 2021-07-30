@@ -5,6 +5,14 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-LRESULT CALLBACK About(HWND, UINT, WPARAM, LPARAM);
+#include "..\WinObj\Dialog.h"
+
+class AboutDialog : public WinObj::CDialog
+{
+public:
+	AboutDialog();
+	virtual ~AboutDialog();
+	virtual LRESULT OnMessage(UINT msg, WPARAM wParam, LPARAM lParam);
+};
 
 #endif // !defined(ABOUT_H_INCLUDED)

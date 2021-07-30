@@ -7,19 +7,19 @@
 CFG=ChangeFileTimePS - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "ChangeFileTimePS.mak".
-!MESSAGE
+!MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "ChangeFileTimePS.mak" CFG="ChangeFileTimePS - Win32 Debug"
-!MESSAGE
+!MESSAGE 
 !MESSAGE Possible choices for configuration are:
-!MESSAGE
+!MESSAGE 
 !MESSAGE "ChangeFileTimePS - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "ChangeFileTimePS - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE
+!MESSAGE 
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
@@ -76,7 +76,7 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
 
-!ENDIF
+!ENDIF 
 
 # Begin Target
 
@@ -100,11 +100,11 @@ SOURCE=.\ChangeFileTimePS.idl
 # End Source File
 # Begin Source File
 
-SOURCE=.\ObjectWindow.cpp
+SOURCE=.\GlobalWinObjInstance.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\PropertyPageDialog.cpp
+SOURCE=.\RecurseModeDialog.cpp
 # End Source File
 # Begin Source File
 
@@ -125,11 +125,11 @@ SOURCE=.\ChangeFileTimeHandler.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\ObjectWindow.h
+SOURCE=.\GlobalWinObjInstance.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\PropertyPageDialog.h
+SOURCE=.\RecurseModeDialog.h
 # End Source File
 # Begin Source File
 
@@ -142,6 +142,10 @@ SOURCE=.\SimplePage.h
 # Begin Source File
 
 SOURCE=.\StdAfx.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\StringList.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
@@ -166,7 +170,7 @@ SOURCE=.\ChangeFileTimePS.def
 # End Source File
 # Begin Source File
 
-SOURCE=.\ReadMe.txt
+SOURCE=.\README.md
 # End Source File
 # End Target
 # End Project
