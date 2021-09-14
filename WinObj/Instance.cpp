@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "Instance.h"
 
 namespace WinObj
@@ -12,7 +12,7 @@ namespace WinObj
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CInstance::CInstance() : CHandle<HINSTANCE>()
+CInstance::CInstance()
 {
 }
 

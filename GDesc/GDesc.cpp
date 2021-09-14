@@ -1,7 +1,7 @@
 // GDesc.cpp : Defines the entry point for the application.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "GCanvasW32.h"
 #include "GPointerList.h"
 #include "GWindow.h"
@@ -18,9 +18,9 @@ GWindowManager* list1;
 
 // Foward declarations of functions included in this code module:
 ATOM MyRegisterClass(HINSTANCE hInstance);
-BOOL InitInstance(HINSTANCE, int);
-LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK About(HWND, UINT, WPARAM, LPARAM);
+BOOL InitInstance(HINSTANCE /*hInstance*/, int /*nCmdShow*/);
+LRESULT CALLBACK WndProc(HWND /*hWnd*/, UINT /*message*/, WPARAM /*wParam*/, LPARAM /*lParam*/);
+LRESULT CALLBACK About(HWND /*hDlg*/, UINT /*message*/, WPARAM /*wParam*/, LPARAM /*lParam*/);
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -34,7 +34,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	MyRegisterClass(hInstance);
 
 	// Perform application initialization:
-	if (!InitInstance(hInstance, nCmdShow))
+	if (InitInstance(hInstance, nCmdShow) == 0)
 	{
 		return FALSE;
 	}
@@ -107,7 +107,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	hWnd = CreateWindowEx(0, szWindowClass, szTitle, WS_POPUP, 0, 0, GetSystemMetrics(SM_CXSCREEN),
 	                      GetSystemMetrics(SM_CYSCREEN), NULL, NULL, hInstance, NULL);
 
-	if (!hWnd)
+	if (hWnd == NULL)
 	{
 		return FALSE;
 	}
@@ -130,7 +130,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	int wmId, wmEvent;
+	int wmId;
+	int wmEvent;
 	PAINTSTRUCT ps;
 	HDC hdc;
 	GCanvasW32* canvas;
@@ -164,7 +165,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		hdc = BeginPaint(hWnd, &ps);
 
 		list1->GotoFirst();
-		while (list1->CurrData())
+		while (list1->CurrData() != NULL)
 		{
 			canvas = new GCanvasW32(hdc);
 			((GWindow*)list1->CurrData())->GetWindowRect(&rt);
@@ -185,9 +186,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		active = list1->GetActiveWindow();
 		curr   = list1->WindowFromPoint(LOWORD(lParam), HIWORD(lParam));
 
-		if ((active != curr) && (curr))
+		if ((active != curr) && ((curr) != NULL))
 		{
-			if (active)
+			if (active != NULL)
 			{
 				canvas = new GCanvasW32(hWnd);
 				active->SetWindowState(0);

@@ -1,5 +1,5 @@
 // ChangeFileTimeHandler.cpp : Implementation of CChangeFileTimeHandler
-#include "stdafx.h"
+#include "StdAfx.h"
 #if _MSC_VER > 1200
 #include "ChangeFileTimePS_h.h"
 #else
@@ -39,10 +39,8 @@ HRESULT CChangeFileTimeHandler::Initialize(LPCITEMIDLIST pidlFolder, LPDATAOBJEC
 		ReleaseStgMedium(&stg);
 		return S_OK;
 	}
-	else
-	{
-		return E_FAIL;
-	}
+
+	return E_FAIL;
 }
 
 HRESULT CChangeFileTimeHandler::AddPages(LPFNADDPROPSHEETPAGE lpfnAddPage, LPARAM lParam)

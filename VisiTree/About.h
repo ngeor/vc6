@@ -12,7 +12,7 @@ class AboutDialog : public WinObj::CDialog
 public:
 	AboutDialog();
 	virtual ~AboutDialog();
-	virtual LRESULT OnMessage(UINT msg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnMessage(UINT message, WPARAM wParam, LPARAM lParam);
 };
 
 #endif // !defined(ABOUT_H_INCLUDED)

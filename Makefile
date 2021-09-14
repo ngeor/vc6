@@ -12,6 +12,8 @@ vs2019_release:
 	msbuild vs2019.sln -t:Rebuild -p:Configuration=Release
 vs2019_debug_build:
 	msbuild vs2019.sln -p:Configuration=Debug
+tidy:
+	$(BASH) -c 'find . -type f -name "*.cpp" -exec clang-tidy \{\} --fix \;'
 format:
 	$(BASH) -c 'find . -type f -name "*.cpp" -exec clang-format -i \{\} \;'
 	$(BASH) -c 'find . -type f -name "*.h" -exec clang-format -i \{\} \;'

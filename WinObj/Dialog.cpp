@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "Dialog.h"
 namespace WinObj
 {
@@ -16,10 +16,8 @@ CDialog::CDialog() : CWnd(NULL), _instance(NULL)
 
 CDialog::~CDialog()
 {
-	if (_instance != NULL)
-	{
-		delete _instance;
-	}
+
+	delete _instance;
 }
 
 const CInstance* CDialog::GetInstance()
@@ -38,13 +36,13 @@ const CInstance* CDialog::GetInstance()
 	return _instance;
 }
 
-LRESULT CALLBACK __InternalDialogBootstrapProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK InternalDialogBootstrapProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	CDialog* dialog;
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		if (lParam)
+		if (lParam != 0)
 		{
 #if _MSC_VER > 1200
 			SetWindowLongPtr(hWnd, GWLP_USERDATA, lParam);
@@ -62,7 +60,7 @@ LRESULT CALLBACK __InternalDialogBootstrapProc(HWND hWnd, UINT message, WPARAM w
 #else
 		dialog = (CDialog*)GetWindowLong(hWnd, GWL_USERDATA);
 #endif
-		if (dialog)
+		if (dialog != NULL)
 		{
 			return dialog->OnMessage(message, wParam, lParam);
 		}
@@ -74,20 +72,20 @@ LRESULT CALLBACK __InternalDialogBootstrapProc(HWND hWnd, UINT message, WPARAM w
 bool CDialog::Create(const CInstance& instance, int dialogResource)
 {
 	HWND hWnd = ::CreateDialogParam(instance.GetHandle(), MAKEINTRESOURCE(dialogResource), 0,
-	                                (DLGPROC)__InternalDialogBootstrapProc, (LPARAM)this);
+	                                (DLGPROC)InternalDialogBootstrapProc, (LPARAM)this);
 	return hWnd != NULL;
 }
 
 INT_PTR CDialog::Modal(const CInstance& instance, const CWnd& parent, int dialogResource)
 {
 	return ::DialogBoxParam(instance.GetHandle(), MAKEINTRESOURCE(dialogResource), parent.GetHandle(),
-	                        (DLGPROC)__InternalDialogBootstrapProc, (LPARAM)this);
+	                        (DLGPROC)InternalDialogBootstrapProc, (LPARAM)this);
 }
 
 INT_PTR CDialog::Modal(const CInstance& instance, int dialogResource)
 {
 	return ::DialogBoxParam(instance.GetHandle(), MAKEINTRESOURCE(dialogResource), 0,
-	                        (DLGPROC)__InternalDialogBootstrapProc, (LPARAM)this);
+	                        (DLGPROC)InternalDialogBootstrapProc, (LPARAM)this);
 }
 
 LRESULT CDialog::OnMessage(UINT message, WPARAM wParam, LPARAM lParam)

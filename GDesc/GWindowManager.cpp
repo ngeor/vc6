@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "GWindowManager.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -16,7 +16,7 @@ GWindowManager::GWindowManager()
 GWindowManager::~GWindowManager()
 {
 	GotoFirst();
-	while (CurrData())
+	while (CurrData() != NULL)
 	{
 		delete ((GWindow*)CurrData());
 		GotoNext();
@@ -38,15 +38,19 @@ GWindow* GWindowManager::GetActiveWindow()
 	BOOL f1 = TRUE;
 	GotoFirst();
 
-	while (CurrData() && !(((GWindow*)CurrData())->GetWindowState() & WS_ACTIVE))
+	while ((CurrData() != NULL) && ((((GWindow*)CurrData())->GetWindowState() & WS_ACTIVE) == 0))
+	{
 		GotoNext();
+	}
 	return (GWindow*)CurrData();
 }
 
 GWindow* GWindowManager::WindowFromPoint(int x, int y)
 {
 	GotoLast();
-	while (CurrData() && (((GWindow*)CurrData())->HitTest(x, y) == HT_OUTSIDE))
+	while ((CurrData() != NULL) && (((GWindow*)CurrData())->HitTest(x, y) == HT_OUTSIDE))
+	{
 		GotoPrev();
+	}
 	return (GWindow*)CurrData();
 }

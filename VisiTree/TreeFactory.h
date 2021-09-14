@@ -16,7 +16,7 @@ class TreeFactory
 public:
 	TreeFactory();
 	virtual ~TreeFactory();
-	AbstractTree *Create(TreeType treeType, KeyType keyType);
+	static AbstractTree *Create(TreeType treeType, KeyType keyType);
 };
 
 #endif // !defined(AFX_TREEFACTORY_H__16C2C36F_85BB_4FEE_86EE_34D0F3816633__INCLUDED_)

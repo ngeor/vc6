@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "OpenFileName.h"
 
 namespace WinObj
@@ -12,7 +12,7 @@ namespace WinObj
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-COpenFileName::COpenFileName(const CInstance& app, const CWnd& owner) : _app(app), _filter()
+COpenFileName::COpenFileName(const CInstance& app, const CWnd& owner) : _app(app)
 {
 	memset(&_of, 0, sizeof(OPENFILENAME));
 	_of.lStructSize = sizeof(OPENFILENAME);
@@ -43,7 +43,7 @@ LPTSTR ReplaceFilter(const str& filter)
 #endif
 
 	LPTSTR p = newBuffer;
-	while (*p)
+	while (*p != 0)
 	{
 		if (*p == '|')
 		{
@@ -108,12 +108,12 @@ COpenFileName& COpenFileName::WithDefaultExtension(LPCTSTR defaultExtension)
 	return *this;
 }
 
-LPCTSTR COpenFileName::GetFile()
+LPCTSTR COpenFileName::GetFile() const
 {
 	return _of.lpstrFile;
 }
 
-int COpenFileName::GetFileOffset()
+int COpenFileName::GetFileOffset() const
 {
 	return _of.nFileOffset;
 }

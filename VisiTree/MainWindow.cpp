@@ -7,7 +7,7 @@
 
 #define DEFAULT_EXTENSION _T("emf")
 
-MainWindow::MainWindow() : WinObj::CDialog()
+MainWindow::MainWindow()
 {
 	myTree = treeFactory.Create(TreeTypeSearch, KeyTypeInteger);
 }
@@ -47,7 +47,7 @@ void MainWindow::OpenTreeFile(LPCTSTR szFile)
 #else
 	fp = _tfopen(szFile, _T("r"));
 #endif
-	while (!feof(fp))
+	while (feof(fp) == 0)
 	{
 		switch (myTree->GetKeyType())
 		{
@@ -69,7 +69,7 @@ void MainWindow::OpenTreeFile(LPCTSTR szFile)
 				break;
 		}
 
-		if (success)
+		if (success != 0)
 		{
 			myTree->Add(data);
 		}
@@ -120,8 +120,10 @@ void MainWindow::OnAdd()
 	{
 		case KeyTypeChar:
 			TCHAR buf[2];
-			if (success = (GetDlgItemText(ID_INPUT, buf, 2) != 0))
+			if ((success = (GetDlgItemText(ID_INPUT, buf, 2) != 0)))
+			{
 				data.c = buf[0];
+			}
 			break;
 
 		case KeyTypeInteger:
@@ -162,16 +164,21 @@ void MainWindow::OnAdd()
 
 void MainWindow::KeyTypeChanged(KeyType keyType)
 {
-	int i, j;
+	int i;
+	int j;
 
 	/* Refresh combo box */
 	j = SendDlgItemMessage(ID_KEYTYPE, CB_GETCOUNT, 0, 0);
 	i = 0;
 	while ((i < j) && (keyType != (char)SendDlgItemMessage(
 									  ID_KEYTYPE, CB_GETITEMDATA, i, 0)))
+	{
 		i++;
+	}
 	if (i < j)
+	{
 		SendDlgItemMessage(ID_KEYTYPE, CB_SETCURSEL, i, 0);
+	}
 
 	/* Refresh Menu Items */
 	/* Remember that the order is char, int, float, string */
@@ -318,8 +325,10 @@ LRESULT MainWindow::OnCommand(UINT message, WPARAM wParam, LPARAM lParam)
 				int i;
 				i = SendMessage((HWND)lParam, CB_GETCURSEL, 0, 0);
 				if (i >= 0)
+				{
 					SetKeyType((KeyType)SendMessage(
 						(HWND)lParam, CB_GETITEMDATA, i, 0));
+				}
 			}
 		default:
 			return DefWindowProc(GetHandle(), message, wParam, lParam);

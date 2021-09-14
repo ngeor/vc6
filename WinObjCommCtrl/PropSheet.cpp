@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include <tchar.h>
 #include "PropSheet.h"
 
@@ -13,7 +13,7 @@ namespace WinObj
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CPropSheet::CPropSheet() : CDialog()
+CPropSheet::CPropSheet()
 {
 }
 
@@ -60,7 +60,7 @@ LRESULT CALLBACK InternalPropSheetBootstrapProc(HWND hWnd, UINT message, WPARAM 
 #else
 		dialog = (CPropSheet*)GetWindowLong(hWnd, GWL_USERDATA);
 #endif
-		if (dialog)
+		if (dialog != NULL)
 		{
 			return dialog->OnMessage(message, wParam, lParam);
 		}

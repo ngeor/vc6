@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "SimplePage.h"
 #if _MSC_VER > 1200
 #include "ChangeFileTimePS_h.h"
@@ -22,8 +22,7 @@ str IncludeTrailingBackSlash(const str& buf)
 	return buf;
 }
 
-CSimplePage::CSimplePage(string_list fileList, bool hasFolders)
-	: WinObj::CPropSheet(), mylist(fileList), hasfolders(hasFolders)
+CSimplePage::CSimplePage(string_list fileList, bool hasFolders) : mylist(fileList), hasfolders(hasFolders)
 {
 }
 
@@ -82,9 +81,13 @@ void CSimplePage::OnOneTimeClick()
 void CSimplePage::applyAttribute(LPDWORD attrs, UINT checkboxState, DWORD fileAttribute)
 {
 	if (checkboxState == BST_CHECKED)
+	{
 		*attrs |= fileAttribute;
+	}
 	else if (checkboxState == BST_UNCHECKED)
+	{
 		*attrs &= ~fileAttribute;
+	}
 }
 
 void CSimplePage::prepareAttribute(LPDWORD orMask, LPDWORD andMask, UINT bFlag, UINT bInitFlag, DWORD fileAttribute)
@@ -92,9 +95,13 @@ void CSimplePage::prepareAttribute(LPDWORD orMask, LPDWORD andMask, UINT bFlag, 
 	if (bFlag != bInitFlag)
 	{
 		if (bFlag == BST_CHECKED)
+		{
 			*orMask |= fileAttribute;
+		}
 		else if (bFlag == BST_UNCHECKED)
+		{
 			*andMask &= ~fileAttribute;
+		}
 	}
 }
 
@@ -143,14 +150,14 @@ BOOL CSimplePage::GetSomeFileTime(int ctlIndex, LPFILETIME ft)
 		p1.wMilliseconds = p2.wMilliseconds;
 		p1.wMinute       = p2.wMinute;
 		p1.wSecond       = p2.wSecond;
-		if (!SystemTimeToFileTime(&p1, &f1))
+		if (SystemTimeToFileTime(&p1, &f1) == 0)
+		{
 			return FALSE;
+		}
 		return LocalFileTimeToFileTime(&f1, ft);
 	}
-	else
-	{
-		return FALSE;
-	}
+
+	return FALSE;
 }
 
 void CSimplePage::MySetFileTime(const str& lpFileName, LPFILETIME f1, LPFILETIME f2, LPFILETIME f3)
@@ -163,7 +170,7 @@ void CSimplePage::MySetFileTime(const str& lpFileName, LPFILETIME f1, LPFILETIME
 	}
 	else
 	{
-		if (!SetFileTime(hFile, f1, f2, f3))
+		if (SetFileTime(hFile, f1, f2, f3) == 0)
 		{
 			// add something to the log
 		}
@@ -181,8 +188,9 @@ void CSimplePage::MyGetFileTime(const str& lpFileName, SYSTEMTIME(s)[3])
 	}
 	else
 	{
-		FILETIME f[3], lf[3];
-		if (!GetFileTime(hFile, &f[0], &f[1], &f[2]))
+		FILETIME f[3];
+		FILETIME lf[3];
+		if (GetFileTime(hFile, &f[0], &f[1], &f[2]) == 0)
 		{
 			// add something to the log
 		}
@@ -228,35 +236,45 @@ bool CSimplePage::OnOK()
 	int it;
 
 	if (IsDlgButtonChecked(IDC_ATTRIBUTES) != BST_CHECKED && IsDlgButtonChecked(IDC_TIMES) != BST_CHECKED)
+	{
 		return true;
+	}
 
 	if (hasfolders)
 	{
 		recurseMode = RecurseMode();
-		if (!recurseMode)
+		if (recurseMode == 0)
+		{
 			return false;
+		}
 	}
 
 	SetCursor(LoadCursor(0, IDC_WAIT));
 
-	if (recurseMode & RECURSE_SKIP_ROOT)
+	if ((recurseMode & RECURSE_SKIP_ROOT) != 0)
 	{
 		templist.clear();
 		for (it = 0; it < mylist.size(); it++)
 		{
-			if (!(GetFileAttributes(mylist[it].c_str()) & FILE_ATTRIBUTE_DIRECTORY))
+			if ((GetFileAttributes(mylist[it].c_str()) & FILE_ATTRIBUTE_DIRECTORY) == 0u)
+			{
 				templist.push_back(mylist[it]);
+			}
 		}
 	}
 	else
+	{
 		initTempList();
+	}
 
 	if (recurseMode != RECURSE_SIMPLE)
 	{
 		for (it = 0; it < mylist.size(); it++)
 		{
 			if (GetFileAttributes(mylist[it].c_str()) & FILE_ATTRIBUTE_DIRECTORY)
+			{
 				recurseThat(mylist[it]);
+			}
 		}
 	}
 
@@ -269,7 +287,8 @@ bool CSimplePage::OnOK()
 		UINT bHidden   = IsDlgButtonChecked(IDC_HIDDEN);
 		UINT bSystem   = IsDlgButtonChecked(IDC_SYSTEM);
 
-		DWORD orMask, andMask;
+		DWORD orMask;
+		DWORD andMask;
 		prepareMasks(&orMask, &andMask, bArchive, bReadOnly, bHidden, bSystem);
 
 		// for each file:
@@ -287,12 +306,16 @@ bool CSimplePage::OnOK()
 	if (IsDlgButtonChecked(IDC_TIMES) == BST_CHECKED)
 	{
 		bool failure = false;
-		FILETIME ftCreate, ftLastAccess, ftLastWrite;
-		LPFILETIME lpftCreate = NULL, lpftLastAccess = NULL, lpftLastWrite = NULL;
+		FILETIME ftCreate;
+		FILETIME ftLastAccess;
+		FILETIME ftLastWrite;
+		LPFILETIME lpftCreate     = NULL;
+		LPFILETIME lpftLastAccess = NULL;
+		LPFILETIME lpftLastWrite  = NULL;
 
 		if (IsDlgButtonChecked(IDC_ONE_TIME) == BST_CHECKED)
 		{
-			if (!GetSomeFileTime(0, &ftCreate))
+			if (GetSomeFileTime(0, &ftCreate) == 0)
 			{
 				// generic failure
 				failure = true;
@@ -306,7 +329,7 @@ bool CSimplePage::OnOK()
 		{
 			if (IsDlgButtonChecked(IDC_CREATE) == BST_CHECKED)
 			{
-				if (!GetSomeFileTime(0, &ftCreate))
+				if (GetSomeFileTime(0, &ftCreate) == 0)
 				{
 					failure = true;
 				}
@@ -318,7 +341,7 @@ bool CSimplePage::OnOK()
 
 			if (!failure && IsDlgButtonChecked(IDC_LAST_ACCESS) == BST_CHECKED)
 			{
-				if (!GetSomeFileTime(1, &ftLastAccess))
+				if (GetSomeFileTime(1, &ftLastAccess) == 0)
 				{
 					failure = true;
 				}
@@ -330,7 +353,7 @@ bool CSimplePage::OnOK()
 
 			if (!failure && IsDlgButtonChecked(IDC_LAST_WRITE) == BST_CHECKED)
 			{
-				if (!GetSomeFileTime(2, &ftLastWrite))
+				if (GetSomeFileTime(2, &ftLastWrite) == 0)
 				{
 					failure = true;
 				}
@@ -352,7 +375,7 @@ bool CSimplePage::OnOK()
 				if (includeReadOnly)
 				{
 					attrs = GetFileAttributes(templist[it].c_str());
-					if (restoreReadOnly = (attrs & FILE_ATTRIBUTE_READONLY))
+					if ((restoreReadOnly = ((attrs & FILE_ATTRIBUTE_READONLY)) != 0u))
 					{
 						SetFileAttributes(templist[it].c_str(), attrs & ~FILE_ATTRIBUTE_READONLY);
 					}
@@ -361,7 +384,9 @@ bool CSimplePage::OnOK()
 				MySetFileTime(templist[it], lpftCreate, lpftLastAccess, lpftLastWrite);
 
 				if (restoreReadOnly)
+				{
 					SetFileAttributes(templist[it].c_str(), attrs);
+				}
 			}
 		}
 	}
@@ -393,17 +418,23 @@ void CSimplePage::checkFileAttribute(DWORD attrs, DWORD attrBit, UINT* value, bo
 {
 	UINT test;
 
-	test = (attrs & attrBit) ? BST_CHECKED : BST_UNCHECKED;
+	test = (attrs & attrBit) != 0u ? BST_CHECKED : BST_UNCHECKED;
 	if (firstTime)
+	{
 		*value = test;
+	}
 	else if (*value != test)
+	{
 		*value = BST_INDETERMINATE;
+	}
 }
 
 void CSimplePage::initCheckBox(UINT ctlID, UINT value)
 {
 	if (value == BST_INDETERMINATE)
+	{
 		SendDlgItemMessage(ctlID, BM_SETSTYLE, BS_AUTO3STATE, 0);
+	}
 
 	CheckDlgButton(ctlID, value);
 }
@@ -412,7 +443,10 @@ LRESULT CSimplePage::OnInitDialog(LPARAM lParam)
 {
 	int it;
 
-	UINT bArchive, bReadOnly, bHidden, bSystem;
+	UINT bArchive;
+	UINT bReadOnly;
+	UINT bHidden;
+	UINT bSystem;
 	for (it = 0; it < mylist.size(); it++)
 	{
 
@@ -438,7 +472,7 @@ LRESULT CSimplePage::OnInitDialog(LPARAM lParam)
 	initCheckBox(IDC_ONE_TIME, BST_CHECKED);
 	OnOneTimeClick();
 
-	if (mylist.size() > 0)
+	if (!mylist.empty())
 	{
 		InitDateTimeCtls(mylist[0]);
 	}
@@ -515,7 +549,7 @@ void CSimplePage::recurseThat(const str& szDir)
 			if (lstrcmp(fd.cFileName, _T(".")) && lstrcmp(fd.cFileName, _T("..")))
 			{
 				buf = IncludeTrailingBackSlash(szDir) + fd.cFileName;
-				if (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+				if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0u)
 				{
 					recurseThat(buf);
 				}
@@ -533,15 +567,19 @@ void CSimplePage::recurseThat(const str& szDir)
 			if (lstrcmp(fd.cFileName, _T(".")) && lstrcmp(fd.cFileName, _T("..")))
 			{
 				buf = IncludeTrailingBackSlash(szDir) + fd.cFileName;
-				if (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+				if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0u)
 				{
-					if (recurseMode & RECURSE_FOLDERS)
+					if ((recurseMode & RECURSE_FOLDERS) != 0)
+					{
 						templist.push_back(buf);
+					}
 				}
 				else
 				{
-					if (recurseMode & RECURSE_FILES)
+					if ((recurseMode & RECURSE_FILES) != 0)
+					{
 						templist.push_back(buf);
+					}
 				}
 			}
 		} while (FindNextFile(fh, &fd));

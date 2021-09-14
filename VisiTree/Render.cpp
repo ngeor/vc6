@@ -45,7 +45,7 @@ void drawNode(pnode node, KeyType keyType, HDC dc, int x, int y, int level)
 
 		// poso ua megalosei to R toy L kai to L toy R ?
 
-		if (node->left)
+		if (node->left != NULL)
 		{
 			points[0].x = x + HORZ_RADIUS;
 			points[0].y = y + 2 * VERT_RADIUS; // circle most bottom point
@@ -64,7 +64,7 @@ void drawNode(pnode node, KeyType keyType, HDC dc, int x, int y, int level)
 					 y + 2 * VERT_RADIUS + LEVEL_HEIGHT,
 					 level - 1);
 		}
-		if (node->right)
+		if (node->right != NULL)
 		{
 			points[0].x = x + HORZ_RADIUS;
 			points[0].y = y + 2 * VERT_RADIUS; // circle most bottom point
@@ -90,7 +90,8 @@ int calcTreeHeight(pnode node)
 {
 	if (node != NULL)
 	{
-		int h1, h2;
+		int h1;
+		int h2;
 		h1 = 1 + calcTreeHeight(node->left);
 		h2 = 1 + calcTreeHeight(node->right);
 		return (h1 > h2) ? h1 : h2;
@@ -106,7 +107,9 @@ void calcTreeRect(pnode root, LPRECT rt)
 	rt->right = 0;
 	height    = calcTreeHeight(root);
 	for (int i = 0; i <= height - 2; i++)
+	{
 		rt->right += 2 * ((1 << i) * (HORZ_SPACE + HORZ_RADIUS));
+	}
 	rt->right += 2 * HORZ_RADIUS;
 	rt->bottom = height * (2 * VERT_RADIUS + LEVEL_HEIGHT) - LEVEL_HEIGHT;
 }
@@ -128,8 +131,8 @@ void render(AbstractTree *mytree, LPRECT rt, HDC hdc)
 	// Delete
 }
 
-#define PIXELSXTODMM(hdc, x) (x) * 2540 / GetDeviceCaps(hdc, LOGPIXELSX)
-#define PIXELSYTODMM(hdc, y) (y) * 2540 / GetDeviceCaps(hdc, LOGPIXELSY)
+#define PIXELSXTODMM(hdc, x) ((x)*2540 / GetDeviceCaps(hdc, LOGPIXELSX))
+#define PIXELSYTODMM(hdc, y) ((y)*2540 / GetDeviceCaps(hdc, LOGPIXELSY))
 
 void renderMetafile(AbstractTree *mytree, HWND hWnd, LPCTSTR filename)
 {

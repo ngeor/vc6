@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "GCanvasW32.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -11,7 +11,7 @@
 
 GCanvasW32::GCanvasW32(HANDLE handle)
 {
-	if (IsWindow((HWND)handle) || (!handle))
+	if ((IsWindow((HWND)handle) != 0) || (handle == NULL))
 	{
 		FWnd    = (HWND)handle;
 		FHandle = GetDC(FWnd);
@@ -30,8 +30,10 @@ GCanvasW32::~GCanvasW32()
 {
 	DeleteObject(SelectObject(FHandle, oldPen));
 	DeleteObject(SelectObject(FHandle, oldBrush));
-	if (FWnd)
+	if (FWnd != NULL)
+	{
 		ReleaseDC(FWnd, FHandle);
+	}
 }
 
 long GCanvasW32::GetTextColor()
@@ -57,13 +59,17 @@ void GCanvasW32::SetTextColor(long newColor)
 void GCanvasW32::SetOutlineColor(long newColor)
 {
 	if (newColor != FOutlineColor)
+	{
 		DeleteObject(SelectObject(FHandle, CreatePen(PS_SOLID, 1, FOutlineColor = newColor)));
+	}
 }
 
 void GCanvasW32::SetBgColor(long newColor)
 {
 	if (newColor != FBgColor)
+	{
 		DeleteObject(SelectObject(FHandle, CreateSolidBrush(FBgColor = newColor)));
+	}
 }
 
 void GCanvasW32::Rectangle(int x1, int y1, int x2, int y2)
@@ -85,12 +91,12 @@ void GCanvasW32::TextOut(LPCTSTR string, int length, int x, int y)
 
 BOOL GCanvasW32::IsTextTransparent()
 {
-	return (::GetBkMode(FHandle) == TRANSPARENT);
+	return static_cast<BOOL>(::GetBkMode(FHandle) == TRANSPARENT);
 }
 
 void GCanvasW32::SetTextTransparent(BOOL fTransparent)
 {
-	::SetBkMode(FHandle, (fTransparent) ? TRANSPARENT : OPAQUE);
+	::SetBkMode(FHandle, (fTransparent) != 0 ? TRANSPARENT : OPAQUE);
 }
 
 void GCanvasW32::GetTextExtent(LPCTSTR szBuf, int length, int* cx, int* cy)

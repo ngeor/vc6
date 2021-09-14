@@ -35,8 +35,8 @@ public:
 	COpenFileName& WithDefaultExtension(LPCTSTR defaultExtension);
 	COpenFileName& WithFilterIndex(int index);
 
-	LPCTSTR GetFile();
-	int GetFileOffset();
+	LPCTSTR GetFile() const;
+	int GetFileOffset() const;
 };
 } // namespace WinObj
 #endif // !defined(AFX_OPENFILENAME_H__7C28D4FE_8876_4720_90B2_3308DF99D5F8__INCLUDED_)

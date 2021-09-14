@@ -1,10 +1,10 @@
 // ImageStitch.cpp : Defines the entry point for the application.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "..\WinObjCommDlg\OpenFileName.h"
 #include "..\WinObj\WinObj.h"
-#include "resource.h"
+#include "Resource.h"
 
 #define ID_TOOLBAR       500
 #define ID_CMD_NEW_FILE  501
@@ -23,8 +23,8 @@ class MainDialog : public WinObj::CDialog
 {
 	void OnClose();
 	void OnCommand(WPARAM wParam, LPARAM lParam);
-	void OnDeleteItem(WPARAM wParam, LPARAM lParam);
-	void OnDrawItem(LPARAM lParam);
+	static void OnDeleteItem(WPARAM wParam, LPARAM lParam);
+	static void OnDrawItem(LPARAM lParam);
 	void OnMeasureItem(LPARAM lParam);
 	void OnPaint();
 	void DoAddFile(LPCTSTR szFileName, LPCTSTR szPathName = NULL);
@@ -90,11 +90,15 @@ void MainDialog::DoAddFile(LPCTSTR szFileName, LPCTSTR szPathName)
 	{
 		lstrcpy(le->szPath, szPathName);
 		if (szPathName[lstrlen(szPathName) - 1] != '\\')
+		{
 			lstrcat(le->szPath, _T("\\"));
+		}
 		lstrcat(le->szPath, szFileName);
 	}
 	else
+	{
 		lstrcpy(le->szPath, szFileName);
+	}
 	le->hBitmap = (HBITMAP)LoadImage(0, le->szPath, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 
 	SendDlgItemMessage(ID_LST_ICONS, LB_ADDSTRING, 0, (LPARAM)le);
@@ -144,9 +148,11 @@ void MainDialog::OnCmdMoveLeft(int pos)
 	int nSel = SendDlgItemMessage(ID_LST_ICONS, LB_GETCURSEL, 0, 0);
 	if (nSel >= 0)
 	{
-		DWORD a, b;
-		int newSel, count = SendDlgItemMessage(ID_LST_ICONS, LB_GETCOUNT, 0, 0);
-		newSel = (nSel + count + pos) % count;
+		DWORD a;
+		DWORD b;
+		int newSel;
+		int count = SendDlgItemMessage(ID_LST_ICONS, LB_GETCOUNT, 0, 0);
+		newSel    = (nSel + count + pos) % count;
 
 		a = SendDlgItemMessage(ID_LST_ICONS, LB_GETITEMDATA, nSel, 0);
 		b = SendDlgItemMessage(ID_LST_ICONS, LB_GETITEMDATA, newSel, 0);
@@ -180,7 +186,9 @@ void MainDialog::DoOpenFile(LPCTSTR szFileName)
 		p                     = buf + 1;
 	}
 	else
+	{
 		p = buf;
+	}
 
 #if _MSC_VER > 1200
 	_tfopen_s(&fp, p, _T("rt"));
@@ -191,7 +199,9 @@ void MainDialog::DoOpenFile(LPCTSTR szFileName)
 	while (_fgetts(buf, MAX_PATH, fp) != NULL)
 	{
 		if ((p = _tcsrchr(buf, '\n')) != NULL)
+		{
 			*p = '\0';
+		}
 
 		DoAddFile(buf);
 	}
@@ -220,7 +230,8 @@ void MainDialog::DoSaveFile(LPCTSTR szFileName)
 #else
 	fp = _tfopen(szFileName, _T("tw"));
 #endif
-	int i, count = SendDlgItemMessage(ID_LST_ICONS, LB_GETCOUNT, 0, 0);
+	int i;
+	int count = SendDlgItemMessage(ID_LST_ICONS, LB_GETCOUNT, 0, 0);
 	for (i = 0; i < count; i++)
 	{
 		ListEntry* le = (ListEntry*)SendDlgItemMessage(ID_LST_ICONS, LB_GETITEMDATA, i, 0);
@@ -287,7 +298,9 @@ void MainDialog::OnDeleteItem(WPARAM wParam, LPARAM lParam)
 		if (le != NULL)
 		{
 			if (le->hBitmap != NULL)
+			{
 				DeleteObject(le->hBitmap);
+			}
 			delete le;
 		}
 	}
@@ -299,7 +312,7 @@ void MainDialog::OnDrawItem(LPARAM lParam)
 	ListEntry* le          = (ListEntry*)lpdis->itemData;
 
 	FillRect(lpdis->hDC, &lpdis->rcItem,
-	         (HBRUSH)(1 + (lpdis->itemState & ODS_SELECTED ? COLOR_HIGHLIGHT : COLOR_WINDOW)));
+	         (HBRUSH)(1 + ((lpdis->itemState & ODS_SELECTED) != 0u ? COLOR_HIGHLIGHT : COLOR_WINDOW)));
 
 	if ((signed int)lpdis->itemID >= 0 && lpdis->itemData != NULL)
 	{
@@ -364,7 +377,10 @@ void MainDialog::OnPaint()
 	PAINTSTRUCT ps;
 	RECT clientRt;
 	SIZE imgSz;
-	int x, y, i, count;
+	int x;
+	int y;
+	int i;
+	int count;
 	bool success;
 
 	BeginPaint(&ps);
@@ -433,7 +449,7 @@ void MainDialog::OnPaint()
 	EndPaint(&ps);
 }
 
-MainDialog::MainDialog() : WinObj::CDialog()
+MainDialog::MainDialog()
 {
 }
 

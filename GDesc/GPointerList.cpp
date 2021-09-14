@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "GPointerList.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -24,21 +24,27 @@ void GPointerList::Add(void* data)
 	LPLIST_NODE q;
 	q       = (LPLIST_NODE)malloc(sizeof(LIST_NODE));
 	q->info = data;
-	q->next = (curr) ? curr->next : NULL;
-	q->prev = (curr) ? curr : NULL;
-	if (curr)
+	q->next = (curr) != NULL ? curr->next : NULL;
+	q->prev = (curr) != NULL ? curr : NULL;
+	if (curr != NULL)
+	{
 		curr->next = q;
+	}
 	curr = q;
-	if (!(q->prev))
+	if ((q->prev) == NULL)
+	{
 		first = curr;
-	if (!(q->next))
+	}
+	if ((q->next) == NULL)
+	{
 		last = curr;
+	}
 }
 
 void GPointerList::Clear()
 {
 	LPLIST_NODE q;
-	while (first)
+	while (first != NULL)
 	{
 		q = first->next;
 		free(first);
@@ -59,7 +65,7 @@ void GPointerList::GotoNext()
 
 void* GPointerList::CurrData()
 {
-	return (curr) ? curr->info : NULL;
+	return (curr) != NULL ? curr->info : NULL;
 }
 
 void GPointerList::GotoLast()

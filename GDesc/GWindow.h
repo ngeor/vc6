@@ -24,15 +24,15 @@ private:
 	long FState;
 
 public:
-	LONG HitTest(int x, int y);
+	LONG HitTest(int x, int y) const;
 	void SetBounds(int left, int top, int width, int height);
 	void SetCaption(LPCTSTR szText);
 	LPTSTR GetCaption();
 	virtual void Paint(GAbstractCanvas* canvas);
 	GWindow();
 	virtual ~GWindow();
-	void GetWindowRect(LPRECT lpRect);
-	long GetWindowState();
+	void GetWindowRect(LPRECT lpRect) const;
+	long GetWindowState() const;
 	void SetWindowState(long newState);
 };
 

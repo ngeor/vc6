@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "GWindow.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -17,11 +17,13 @@ GWindow::GWindow()
 
 GWindow::~GWindow()
 {
-	if (FCaption)
+	if (FCaption != NULL)
+	{
 		free(FCaption);
+	}
 }
 
-void GWindow::GetWindowRect(LPRECT lpRect)
+void GWindow::GetWindowRect(LPRECT lpRect) const
 {
 	lpRect->left   = FLeft;
 	lpRect->top    = FTop;
@@ -31,16 +33,17 @@ void GWindow::GetWindowRect(LPRECT lpRect)
 
 void GWindow::Paint(GAbstractCanvas* canvas)
 {
-	int cx, cy;
+	int cx;
+	int cy;
 	canvas->Rectangle(FLeft, FTop, FLeft + FWidth, FTop + FHeight);
 	canvas->SetTextColor(0x00FFFFFF);
-	canvas->SetBgColor(FState & WS_ACTIVE ? 0x00C00000 : 0x00808080);
+	canvas->SetBgColor((FState & WS_ACTIVE) != 0 ? 0x00C00000 : 0x00808080);
 	canvas->GetTextExtent(_T("Mg"), 2, &cx, &cy);
 	canvas->Rectangle(FLeft, FTop, FLeft + FWidth, FTop + cy + 2);
 	canvas->SetBgColor(0x00C0C0C0);
 	canvas->Rectangle(FLeft + FWidth - cy, FTop + 1, FLeft + FWidth - 1, FTop + cy - 1);
 	canvas->SetTextTransparent(TRUE);
-	if (FCaption)
+	if (FCaption != NULL)
 	{
 		canvas->TextOut(FCaption, -1, FLeft + 2, FTop + 2);
 	}
@@ -53,12 +56,12 @@ LPTSTR GWindow::GetCaption()
 
 void GWindow::SetCaption(LPCTSTR szText)
 {
-	if (FCaption)
+	if (FCaption != NULL)
 	{
 		free(FCaption);
 	}
 
-	int len = szText ? _tcslen(szText) : 0;
+	int len = szText != NULL ? _tcslen(szText) : 0;
 	if (len > 0)
 	{
 		FCaption = (LPTSTR)malloc((len + 1) * sizeof(TCHAR));
@@ -69,7 +72,9 @@ void GWindow::SetCaption(LPCTSTR szText)
 #endif
 	}
 	else
+	{
 		FCaption = NULL;
+	}
 }
 
 void GWindow::SetBounds(int left, int top, int width, int height)
@@ -80,7 +85,7 @@ void GWindow::SetBounds(int left, int top, int width, int height)
 	FHeight = height;
 }
 
-long GWindow::GetWindowState()
+long GWindow::GetWindowState() const
 {
 	return FState;
 }
@@ -93,7 +98,7 @@ void GWindow::SetWindowState(long newState)
 	}
 }
 
-LONG GWindow::HitTest(int x, int y)
+LONG GWindow::HitTest(int x, int y) const
 {
-	return ((x >= FLeft) && (x <= FLeft + FWidth) && (y >= FTop) && (y <= FTop + FHeight));
+	return static_cast<LONG>((x >= FLeft) && (x <= FLeft + FWidth) && (y >= FTop) && (y <= FTop + FHeight));
 }

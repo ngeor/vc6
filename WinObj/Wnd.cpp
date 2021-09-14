@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "Wnd.h"
 
 namespace WinObj
@@ -32,14 +32,12 @@ bool CWnd::IsDialogMessage(LPMSG msg)
 bool CWnd::MoveDlgItem(int dlgItem, int x, int y, int width, int height, bool repaint)
 {
 	HWND hChildWnd = ::GetDlgItem(GetHandle(), dlgItem);
-	if (hChildWnd)
+	if (hChildWnd != NULL)
 	{
-		return ::MoveWindow(hChildWnd, x, y, width, height, repaint) != 0;
+		return ::MoveWindow(hChildWnd, x, y, width, height, static_cast<BOOL>(repaint)) != 0;
 	}
-	else
-	{
-		return false;
-	}
+
+	return false;
 }
 
 bool CWnd::GetClientRect(LPRECT rect)
@@ -49,7 +47,7 @@ bool CWnd::GetClientRect(LPRECT rect)
 
 bool CWnd::InvalidateRect(LPRECT rect, bool repaint)
 {
-	return ::InvalidateRect(GetHandle(), rect, repaint) != 0;
+	return ::InvalidateRect(GetHandle(), rect, static_cast<BOOL>(repaint)) != 0;
 }
 
 bool CWnd::DestroyWindow()
@@ -75,14 +73,14 @@ UINT CWnd::GetDlgItemText(int id, LPTSTR buffer, int maxCharacters)
 UINT CWnd::GetDlgItemInt(int id, bool* translated, bool bSigned)
 {
 	BOOL bTranslated;
-	UINT result = ::GetDlgItemInt(GetHandle(), id, &bTranslated, bSigned);
+	UINT result = ::GetDlgItemInt(GetHandle(), id, &bTranslated, static_cast<BOOL>(bSigned));
 	*translated = bTranslated != 0;
 	return result;
 }
 
 bool CWnd::SetDlgItemInt(int id, int value, bool bSigned)
 {
-	return ::SetDlgItemInt(GetHandle(), id, value, bSigned) != 0;
+	return ::SetDlgItemInt(GetHandle(), id, value, static_cast<BOOL>(bSigned)) != 0;
 }
 
 int CWnd::GetDlgItemTextLength(int id)
@@ -92,10 +90,8 @@ int CWnd::GetDlgItemTextLength(int id)
 	{
 		return ::GetWindowTextLength(hChild);
 	}
-	else
-	{
-		return 0;
-	}
+
+	return 0;
 }
 
 LRESULT CWnd::SendDlgItemMessage(int id, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -110,10 +106,8 @@ bool CWnd::GetDlgItemClientRect(int id, LPRECT rect)
 	{
 		return ::GetClientRect(hChild, rect) != 0;
 	}
-	else
-	{
-		return false;
-	}
+
+	return false;
 }
 
 UINT CWnd::IsDlgButtonChecked(int dlgItem)
@@ -136,12 +130,10 @@ bool CWnd::EnableDlgItem(int dlgItem, bool enable)
 	HWND hChild = ::GetDlgItem(GetHandle(), dlgItem);
 	if (hChild != NULL)
 	{
-		return ::EnableWindow(hChild, enable) != 0;
+		return ::EnableWindow(hChild, static_cast<BOOL>(enable)) != 0;
 	}
-	else
-	{
-		return false;
-	}
+
+	return false;
 }
 
 bool CWnd::ShowDlgItem(int dlgItem, int flags)
@@ -151,10 +143,8 @@ bool CWnd::ShowDlgItem(int dlgItem, int flags)
 	{
 		return ::ShowWindow(hChild, flags) != 0;
 	}
-	else
-	{
-		return false;
-	}
+
+	return false;
 }
 
 int CWnd::MsgBox(LPCTSTR text, LPCTSTR caption, UINT flags)

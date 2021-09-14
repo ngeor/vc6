@@ -2,15 +2,15 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "RecurseModeDialog.h"
-#include "resource.h"
+#include "Resource.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-RecurseModeDialog::RecurseModeDialog() : WinObj::CDialog()
+RecurseModeDialog::RecurseModeDialog()
 {
 }
 
@@ -34,16 +34,24 @@ LRESULT RecurseModeDialog::OnMessage(UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 		case IDOK:
 			if (IsDlgButtonChecked(IDC_APPLY_SIMPLE) == BST_CHECKED)
+			{
 				EndDialog(RECURSE_SIMPLE);
+			}
 			else
 			{
 				int ret = 0;
 				if (IsDlgButtonChecked(IDC_FILES) == BST_CHECKED)
+				{
 					ret |= RECURSE_FILES;
+				}
 				if (IsDlgButtonChecked(IDC_FOLDERS) == BST_CHECKED)
+				{
 					ret |= RECURSE_FOLDERS;
+				}
 				if (IsDlgButtonChecked(IDC_NOT_FOLDER) == BST_CHECKED)
+				{
 					ret |= RECURSE_SKIP_ROOT;
+				}
 				GetDlgItemText(IDC_FILTER, filter, MAX_PATH);
 				EndDialog(ret);
 			}

@@ -4,7 +4,7 @@
 //      To build a separate proxy/stub DLL,
 //      run nmake -f ChangeFileTimePSps.mk in the project directory.
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #if _MSC_VER > 1200
 #include "ChangeFileTimePS_h.h"
 #else
@@ -13,7 +13,7 @@
 #include "ChangeFileTimePS_i.c"
 #include "ChangeFileTimeHandler.h"
 #include "GlobalWinObjInstance.h"
-#include "resource.h"
+#include "Resource.h"
 
 CComModule _Module;
 

@@ -47,20 +47,20 @@ private:
 	void OnAttributesClick();
 	void OnTimesClick();
 	void OnOneTimeClick();
-	void applyAttribute(LPDWORD attrs, UINT checkboxState, DWORD fileAttribute);
-	void prepareAttribute(LPDWORD orMask, LPDWORD andMask, UINT bFlag, UINT bInitFlag, DWORD fileAttribute);
+	static void applyAttribute(LPDWORD attrs, UINT checkboxState, DWORD fileAttribute);
+	static void prepareAttribute(LPDWORD orMask, LPDWORD andMask, UINT bFlag, UINT bInitFlag, DWORD fileAttribute);
 	void prepareMasks(LPDWORD orMask, LPDWORD andMask, UINT bArchive, UINT bReadOnly, UINT bHidden, UINT bSystem);
-	void MySetFileAttrs(const str& lpFileName, DWORD orMask, DWORD andMask);
+	static void MySetFileAttrs(const str& lpFileName, DWORD orMask, DWORD andMask);
 	BOOL GetSomeFileTime(int ctlIndex, LPFILETIME ft);
-	void MySetFileTime(const str& lpFileName, LPFILETIME f1, LPFILETIME f2, LPFILETIME f3);
-	void MyGetFileTime(const str& lpFileName, SYSTEMTIME(s)[3]);
+	static void MySetFileTime(const str& lpFileName, LPFILETIME f1, LPFILETIME f2, LPFILETIME f3);
+	static void MyGetFileTime(const str& lpFileName, SYSTEMTIME(s)[3]);
 	void SetSystemTime(int index, LPSYSTEMTIME systemTime);
 	void InitDateTimeCtls(const str& lpFileName);
 	void OnNowClick(UINT id);
 	bool OnOK();
 	void Changed();
 	void Nag();
-	void checkFileAttribute(DWORD attrs, DWORD attrBit, UINT* value, bool firstTime);
+	static void checkFileAttribute(DWORD attrs, DWORD attrBit, UINT* value, bool firstTime);
 	void initCheckBox(UINT ctlID, UINT value);
 
 public:

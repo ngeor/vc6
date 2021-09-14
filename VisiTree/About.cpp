@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "About.h"
 
-AboutDialog::AboutDialog() : CDialog() {}
+AboutDialog::AboutDialog() {}
 
 AboutDialog::~AboutDialog() {}
 
