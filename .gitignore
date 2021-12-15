@@ -1,0 +1,7 @@
+.vs/
+*.ncb
+*.opt
+*.plg
+*.user
+Debug/
+Release/
